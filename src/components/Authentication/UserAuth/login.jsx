@@ -64,7 +64,7 @@ const Login=({}) => {
     return true;
   };
 
-  function isValidEmail(email) {
+  function isValidEmail(email) {  
     const Regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return Regex.test(email);
   };

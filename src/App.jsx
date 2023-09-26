@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/UserUI/home/home';
 import Login from './components/Authentication/UserAuth/login';
 import 'tailwindcss/tailwind.css';
@@ -8,20 +8,13 @@ import UserRole from './components/Authentication/setRole';
 import UserRoutes from './routes/UserRoute';
 import GuideRoutes from './routes/GuideRoute';
 import AdminRoutes from './routes/AdminRoute';
+ 
 
 function App() {
-  // const responseMessage = (response) => {
-  //   console.log(response);
-  // };
-  // const errorMessage = (error) => {
-  //   console.log(error);
-  // };
  
 
   return (
     <div>
-        
-        
       <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -34,11 +27,7 @@ function App() {
         <Route path="/guide/*" element={<GuideRoutes />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>   
-         
-           
-            
-        
-       
+   
     </div>
   );
 }

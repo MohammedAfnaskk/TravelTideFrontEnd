@@ -49,7 +49,7 @@ function UserRole() {
                 </div>
               </div>
               <div>
-                <p className="font-medium m-3">I’m a user, join a trip plan and private trip planning </p>
+                <p className="font-medium m-3">I’m a user, join a trip </p>
               </div>
             </div>
             <div
