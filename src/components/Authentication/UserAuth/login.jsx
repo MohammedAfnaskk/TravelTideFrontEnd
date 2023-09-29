@@ -75,7 +75,7 @@ const Login=({}) => {
       try {
         const res = await userSignin(user);
         if (res.status === 200) {
-          const token = JSON.stringify(res.data);
+          const token = JSON.stringify(res.data); 
           const decoded = jwtDecode(token);
           if (decoded.role === "user") {
             localStorage.setItem("token", token);

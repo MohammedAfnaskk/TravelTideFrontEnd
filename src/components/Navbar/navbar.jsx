@@ -178,6 +178,8 @@ const navListItems = [
   },
 ];
  
+
+
 function NavList() {
   return (
     <div className="mb-4 mt-3 flex flex-col gap-2  lg:mt-3 lg:flex-row mr-4 ">
@@ -240,7 +242,7 @@ export function ComplexNavbar({}) {
 
 
   return (
-    <Navbar className="mx-auto max-w-full p-3 pl-6 rounded-none">
+    <Navbar className="mx-auto max-w-full  p-3 pl-6 rounded-none">
       <div className="relative mx-auto flex items-center text-blue-gray-900">
         <Typography
           as="a"

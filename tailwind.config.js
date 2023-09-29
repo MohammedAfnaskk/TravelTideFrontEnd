@@ -16,6 +16,9 @@ export default withMT({
       },
       width:{
         '700': '700px',
+       },
+      marginleft:{
+        '120':'450rem'
       },
       
     },

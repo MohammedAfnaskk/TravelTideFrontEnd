@@ -37,7 +37,7 @@ export default function LocationPlan() {
            />
         </div>
 
-        {/* Date Picker */}
+        {/* Date Picker  */}
         <div className="mb-4 relative">
           <Input
             type="text"
