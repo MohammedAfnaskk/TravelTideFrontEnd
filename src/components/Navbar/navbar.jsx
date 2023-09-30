@@ -238,8 +238,6 @@ export function ComplexNavbar({}) {
     
   }, []);
 
- 
-
 
   return (
     <Navbar className="mx-auto max-w-full  p-3 pl-6 rounded-none">

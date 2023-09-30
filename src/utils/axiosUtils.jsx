@@ -39,3 +39,5 @@ adminAxiosInstant.interceptors.request.use(async (req) =>{
 })
 
 export { userAxiosInstant, GuideAxiosInstant, adminAxiosInstant}
+
+
