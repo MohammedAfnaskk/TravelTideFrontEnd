@@ -1,8 +1,6 @@
 
 import React from "react";
 
-
-
   const MapComponent = () => {
     const mapOptions = {
         center: { lat: 0, lng: 0 },

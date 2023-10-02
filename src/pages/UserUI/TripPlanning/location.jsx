@@ -1,14 +1,32 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Input, Button } from "@material-tailwind/react";
-import { ComplexNavbar } from "../../components/Navbar/navbar";
+import { ComplexNavbar } from "../../../components/Navbar/navbar";
 import axios from 'axios'; // Import Axios
+import { setMainPlace} from '../../../redux/userSlice';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
     
  
 export default function LocationPlan() {
-  const [place, setPlace] = useState("");
+  const dispatch = useDispatch();
+  const [place, setPlace] = useState('');
+  const mainPlaceData = useSelector((state) => state.user.MainPlace);
+  console.log('Main Place Data:', mainPlaceData);
+
+
+  const handleStartPlanning = () => {
+    const mainPlaceData = { place: place };
+
+     dispatch(setMainPlace(mainPlaceData)); // Dispatch the action to update MainPlace
+  };
+   
+
+ 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -18,6 +36,7 @@ export default function LocationPlan() {
     setStartDate(start);
     setEndDate(end);
   };
+
 
   
   // Function to fetch place data based on user input
@@ -32,12 +51,30 @@ export default function LocationPlan() {
           },
         }
       );
-      // Handle the response data here, e.g., set it in state
+  
       console.log(response.data);
+  
+      // Check if the 'name' field exists in the response data
+      if (response.data && response.data.name) {
+        const placeNameFromAPI = response.data.name;
+  
+        // Display the name in the toast message
+        toast.success(`Place: ${placeNameFromAPI}`);
+      } else {
+        toast.error("Place name not found in the response");
+      }
+  
+      // Handle the response data here, e.g., set it in state
     } catch (error) {
       console.error(error);
+      const errorMessage = error.response
+        ? error.response.data.message // If the error comes from the API response
+        : "An error occurred!"; // If it's a generic error
+  
+      toast.error(errorMessage);
     }
   };
+  
 
 
   return (
@@ -45,7 +82,9 @@ export default function LocationPlan() {
     <ComplexNavbar/>
     <header className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-5xl mt-20 font-bold ">
   Plan a new trip
+
 </header>
+
         <div className=" flex items-center justify-center mt-16">
         <div className=" lg:w-[38rem] ">
           {/* Place Input */}
@@ -90,7 +129,9 @@ export default function LocationPlan() {
       <div class=" flex justify-center mt-16 ">
 
       <Button
-            className="bg-[#f75940] rounded-full h-14 text-white py-2 px-4" >
+            className="bg-[#f75940] rounded-full h-14 text-white py-2 px-4" 
+            onClick={handleStartPlanning} // Dispatch the action when the button is clicked
+            >
             Start Planning
     </Button>
     </div>

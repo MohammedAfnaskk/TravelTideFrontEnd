@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import MapComponent from "../googleMap";
+import MapComponent from "../../GoogleMap/googleMap";
 import { ComplexNavbar } from "../../../components/Navbar/navbar";
 import placeImage from '../../../assets/image/adminbg.jpg';
    
