@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { ComplexNavbar } from "../../NavbarSemi/Nav";
-import placeImage from '../../../assets/image/adminbg.jpg';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Textarea ,Input} from "@material-tailwind/react";
 import  PlaceCard  from '../../UserUI/TripPlanning/PlaceCard';
+import ImageUpload from './imageUpload';
+import { useDispatch } from 'react-redux';
+
 
 const TripPlanningTable = () => {
 
     const handleSaveEntries = () => {
-        // Implement your logic to save all entries here
-        // You can access all entries in the 'entries' state array
-        // For example, you can send them to an API or store them in a database
+      
+        
         console.log('Entries saved:', entries);
       };
-    
- 
     
     const [entries, setEntries] = useState([
       {
@@ -25,10 +24,15 @@ const TripPlanningTable = () => {
         date: '',
       },
     ]);
+    
+    const [notebuget, setnoteBudget] = useState({
+         note:'',
+         budget:'',
+    });
+    const { note , budget } = notebuget;
+    
+    console.log('note and budget',notebuget)
 
-    const [budget, setBudget] = useState(''); // State to store the budget value
-
-  
     const handleAddEntry = () => {
       const newEntry = {
         place: '',
@@ -56,7 +60,8 @@ const TripPlanningTable = () => {
       updatedEntries[index].image = event.target.files[0]; // Assuming you want to store the first selected image
       setEntries(updatedEntries);
     };
-  
+     
+ 
     return (
     <div>
         
@@ -64,25 +69,21 @@ const TripPlanningTable = () => {
 
       {/* Add more content */}
       <div className="relative overflow-y-auto">
-        <img
-          className="w-full lg:h-64 object-cover relative z-10"
-          src={placeImage}
-          alt="nature image"
-        />
+         <ImageUpload/>
+      
         <div className="absolute top-32 lg:ml-32  h-44 ml-16    w-8/12  flex justify-items-center z-20">
           <PlaceCard />
         </div>
         
-        <div className=" px-10 mt-16">
-            
-    
-
-              <p className="mb-2 font-bold">Note</p>
-              <Textarea
-                size="md"
-                label="Note"
-                />
-            </div>
+         <div className=" px-10 mt-16">
+          <p className="mb-2 font-bold">Note</p>
+          <Textarea
+            size="md"
+            label="Note"
+            value={note}
+            onChange={(e) => setnoteBudget({...notebuget,note:e.target.value})}
+            />
+        </div>
 
          <hr className="w-18 border-t border-gray-500 mt-10 " />
 
@@ -157,7 +158,7 @@ const TripPlanningTable = () => {
           type="text"
           placeholder="Enter budget"
           value={budget}
-          onChange={(e) => setBudget(e.target.value)}
+          onChange={(e) => setnoteBudget({...notebuget,budget:e.target.value})}
           className="w-full px-3 py-2 border rounded-lg"
         />
       </div>

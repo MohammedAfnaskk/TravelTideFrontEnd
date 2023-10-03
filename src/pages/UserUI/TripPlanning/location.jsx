@@ -1,41 +1,62 @@
-import React, { useState } from "react";
-import { toast } from "react-toastify";
+  import React, { useState } from "react";
+  import { toast } from "react-toastify";
+  import DatePicker from "react-datepicker";
+  import "react-datepicker/dist/react-datepicker.css";
+  import { Input, Button } from "@material-tailwind/react";
+  import { ComplexNavbar } from "../../../components/Navbar/navbar";
+  import axios from 'axios'; // Import Axios
+  import { clearMainPlace, setMainPlace} from '../../../redux/userSlice';
+  import { useDispatch } from 'react-redux';
+  import { useSelector } from 'react-redux';
+  import { useNavigate } from "react-router-dom";
+  
+  export default function LocationPlan() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [state, setState] = useState({
+      place: '',
+      startDate: null,
+      endDate: null,
+    });
+  
 
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { Input, Button } from "@material-tailwind/react";
-import { ComplexNavbar } from "../../../components/Navbar/navbar";
-import axios from 'axios'; // Import Axios
-import { setMainPlace} from '../../../redux/userSlice';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-
-    
- 
-export default function LocationPlan() {
-  const dispatch = useDispatch();
-  const [place, setPlace] = useState('');
-  const mainPlaceData = useSelector((state) => state.user.MainPlace);
-  console.log('Main Place Data:', mainPlaceData);
-
+  const { place, startDate, endDate } = state;
 
   const handleStartPlanning = () => {
-    const mainPlaceData = { place: place };
+    if (!place) {
+      toast.error("Please enter a place");
+      return;
+   
+    }
 
-     dispatch(setMainPlace(mainPlaceData)); // Dispatch the action to update MainPlace
+    if (!startDate || !endDate) {
+      toast.error("Please select a date range");
+      return;
+    }
+    dispatch(clearMainPlace())
+    dispatch(setMainPlace(state));
+
+    if (place !=''||startDate!=''||endDate!=''){
+      navigate('/user/trip-planning')
+    }
   };
+
+    const mainPlaceData = useSelector((state) => state.user.MainPlace);
+    console.log('Main Place Data:', mainPlaceData.main_place); // Access the main_place property
+    console.log('fghjk',startDate)
+    console.log('fghjkghj',endDate)
    
 
- 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleDateChange = (dates) => {
     const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
+    setState({ ...state, startDate: start, endDate: end });
+
+   
   };
+
+
 
 
   
@@ -76,6 +97,8 @@ export default function LocationPlan() {
   };
   
 
+  
+
 
   return (
     <>
@@ -93,9 +116,9 @@ export default function LocationPlan() {
               type="text"
               label="Select Place"
               value={place}
-              onChange={(e) => setPlace(e.target.value)}
-              onBlur={() => fetchPlaceData(place)} 
-            />
+              onChange={(e) => setState({ ...state, place: e.target.value })}
+              onBlur={() => fetchPlaceData(place)}
+             />
           </div>
 
         {/* Date Picker  */}
@@ -106,10 +129,10 @@ export default function LocationPlan() {
             onClick={() => setShowDatePicker(!showDatePicker)}
             value={
               startDate && endDate
-                ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
-                : ""
+              ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
+              : ""
             }
-          />
+           />
           {showDatePicker && (
             <DatePicker
               selected={startDate}
@@ -119,6 +142,7 @@ export default function LocationPlan() {
               selectsRange
               inline
               className="absolute top-12 left-0 z-10"
+ 
             />
           )}
         </div>

@@ -79,6 +79,7 @@ function Home() {
       <div className="overflow-hidden max-h-550 mt-12 lg:ml-24">
         <div className="simplebar flex flex-col lg:flex-row">
           <SimpleCard />
+ 
         </div>
       </div>
        <FooterWithSocialLinks/>
