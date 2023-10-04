@@ -9,12 +9,12 @@ import { useSelector } from 'react-redux';
 
   export default function SimpleCard() {
     const mainPlaceData = useSelector((state)=> state.user.MainPlace);
-    const place = mainPlaceData.place;
-    const startDate = mainPlaceData.startDate
-    ? new Date(mainPlaceData.startDate).toLocaleDateString()
+    const place = mainPlaceData.main_place;
+    const startDate = mainPlaceData.start_date
+    ? new Date(mainPlaceData.start_date).toLocaleDateString()
     : "";
-    const endDate = mainPlaceData.endDate
-    ? new Date(mainPlaceData.endDate).toLocaleDateString()
+    const endDate = mainPlaceData.end_date
+    ? new Date(mainPlaceData.end_date).toLocaleDateString()
     : "";
 
     console.log('Main Place Data:', mainPlaceData); // Log the entire object

@@ -1,37 +1,56 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef ,useEffect } from 'react'
 import { ComplexNavbar } from "../../NavbarSemi/Nav";
  import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Textarea ,Input} from "@material-tailwind/react";
 import  PlaceCard  from '../../UserUI/TripPlanning/PlaceCard';
-import ImageUpload from './imageUpload';
-import { useDispatch } from 'react-redux';
+ import placeImage from '../../../assets/image/adminbg.jpg';
+ 
+ import { useDispatch, useSelector } from 'react-redux';
+ import { TripPlanning } from '../../../services/userApi';
 
 
 const TripPlanningTable = () => {
-
-    const handleSaveEntries = () => {
-      
-        
-        console.log('Entries saved:', entries);
-      };
+ 
+   
     
-    const [entries, setEntries] = useState([
-      {
-        place: '',
-        description: '',
-        image: null, // You can store the selected image here
-        date: '',
-      },
-    ]);
+   const fileInputRef = useRef(null);
+   const handleFileChange = (event) => {
+    const selectedImage = event.target.files[0];
+     setnoteBudget({
+      ...notebuget,
+      place_image: selectedImage,
+    });
+  };
+  
+  const handleEditClick = () => {
+     fileInputRef.current.click();
+  };
     
     const [notebuget, setnoteBudget] = useState({
          note:'',
          budget:'',
+         place_image:null,
     });
-    const { note , budget } = notebuget;
     
+    const imageUrl = notebuget.place_image ? URL.createObjectURL(notebuget.place_image) : placeImage;
+
+    const { note , budget } = notebuget;
+ 
     console.log('note and budget',notebuget)
+
+
+    
+    const [entries, setEntries] = useState([
+    {
+      place: '',
+      description: '',
+      image: null, // You can store the selected image here
+      date: '',
+    },
+  ]);
+
+    console.log('tripPlannig',entries)
 
     const handleAddEntry = () => {
       const newEntry = {
@@ -60,8 +79,30 @@ const TripPlanningTable = () => {
       updatedEntries[index].image = event.target.files[0]; // Assuming you want to store the first selected image
       setEntries(updatedEntries);
     };
-     
+  
+    
+      const  mainPlace = useSelector((state) => state.user.MainPlace);
+      const MainPlace = {
+        ...mainPlace,
+        ...notebuget,
+      }
+   
+      console.log('afnas',MainPlace);
+      const handleSaveEntries = async () => {
  
+      try {
+        // Send mainPlace and tripPlanningData to the backend
+        const response = await TripPlanning({MainPlace});
+        // Handle success or errors based on the response from the backend
+        console.log("responsse", response)
+      } catch (error) {
+        // Handle API request errors
+        console.log("res",error)
+      }
+    };
+
+ 
+
     return (
     <div>
         
@@ -69,8 +110,28 @@ const TripPlanningTable = () => {
 
       {/* Add more content */}
       <div className="relative overflow-y-auto">
-         <ImageUpload/>
+       {/* main_place image  */}
+
+      <div className="relative">
+      <input
+        id="file-input"
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+        ref={fileInputRef}
+      />
       
+      {/* Image */}
+      <img
+        className="w-full lg:h-64 object-cover relative z-10 cursor-pointer"
+        src={imageUrl}
+        alt="nature image"
+        onClick={handleEditClick}
+
+       />
+    </div>
+
         <div className="absolute top-32 lg:ml-32  h-44 ml-16    w-8/12  flex justify-items-center z-20">
           <PlaceCard />
         </div>

@@ -1,27 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+    import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-    MainPlace: {},
-    // TripPlanning:[],
-}
+    const initialState = {
+        MainPlace: {
 
  
-const userSlice = createSlice({
-    name: 'user',
-    initialState,
-    
-    reducers: {
-        setMainPlace: (state, action) =>{
-            state.MainPlace = action.payload;
         },
-        clearMainPlace: (state, action) =>{
-            state.MainPlace ={};
-        },
-        // setTripPlanning: (state, action) =>{
-        //     state.TripPlanning =action.payload;
-        // },
-     },
-});
+        // TripPlanning:[],
+    }
 
-export const {setMainPlace,clearMainPlace, setTripPlanning} = userSlice.actions;
-export default userSlice.reducer;
+    
+    const userSlice = createSlice({
+        name: 'user',
+        initialState,
+        
+        reducers: {
+            setMainPlace: (state, action) =>{
+                state.MainPlace = action.payload;
+            },
+            clearMainPlace: (state, action) =>{
+                state.MainPlace ={};
+            },
+            // setTripPlanning: (state, action) =>{
+            //     state.TripPlanning =action.payload;
+            // },
+        },
+    });
+
+    export const {setMainPlace,clearMainPlace, setTripPlanning} = userSlice.actions;
+    export default userSlice.reducer;

@@ -9,49 +9,49 @@
   import { useDispatch } from 'react-redux';
   import { useSelector } from 'react-redux';
   import { useNavigate } from "react-router-dom";
-  
+
   export default function LocationPlan() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [state, setState] = useState({
-      place: '',
-      startDate: null,
-      endDate: null,
+      main_place: '',
+      start_date: null,
+      end_date: null,
     });
   
 
-  const { place, startDate, endDate } = state;
+  const { main_place, start_date, end_date } = state;
 
   const handleStartPlanning = () => {
-    if (!place) {
+    if (!main_place) {
       toast.error("Please enter a place");
       return;
    
     }
 
-    if (!startDate || !endDate) {
+    if (!start_date || !end_date) {
       toast.error("Please select a date range");
       return;
     }
     dispatch(clearMainPlace())
     dispatch(setMainPlace(state));
 
-    if (place !=''||startDate!=''||endDate!=''){
+    if (main_place!=''||start_date!=''||end_date!=''){
       navigate('/user/trip-planning')
     }
   };
 
     const mainPlaceData = useSelector((state) => state.user.MainPlace);
     console.log('Main Place Data:', mainPlaceData.main_place); // Access the main_place property
-    console.log('fghjk',startDate)
-    console.log('fghjkghj',endDate)
+    console.log('fghjk',start_date)
+    console.log('fghjkghj',end_date)
    
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleDateChange = (dates) => {
     const [start, end] = dates;
-    setState({ ...state, startDate: start, endDate: end });
+    setState({ ...state, start_date: start, end_date: end });
 
    
   };
@@ -115,9 +115,9 @@
             <Input
               type="text"
               label="Select Place"
-              value={place}
-              onChange={(e) => setState({ ...state, place: e.target.value })}
-              onBlur={() => fetchPlaceData(place)}
+              value={main_place}
+              onChange={(e) => setState({ ...state, main_place: e.target.value })}
+              onBlur={() => fetchPlaceData(main_place)}
              />
           </div>
 
@@ -128,17 +128,17 @@
             label="Select Date Range"
             onClick={() => setShowDatePicker(!showDatePicker)}
             value={
-              startDate && endDate
-              ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
+              start_date && end_date
+              ? `${start_date.toLocaleDateString()} - ${end_date.toLocaleDateString()}`
               : ""
             }
            />
           {showDatePicker && (
             <DatePicker
-              selected={startDate}
+              selected={start_date}
               onChange={handleDateChange}
-              startDate={startDate}
-              endDate={endDate}
+              startDate={start_date}
+              endDate={end_date}
               selectsRange
               inline
               className="absolute top-12 left-0 z-10"
