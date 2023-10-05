@@ -5,16 +5,20 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Textarea ,Input} from "@material-tailwind/react";
 import  PlaceCard  from '../../UserUI/TripPlanning/PlaceCard';
  import placeImage from '../../../assets/image/adminbg.jpg';
- 
+ import jwt_decode from 'jwt-decode'
+
  import { useDispatch, useSelector } from 'react-redux';
  import { TripPlanning } from '../../../services/userApi';
 
 
 const TripPlanningTable = () => {
  
-   
+  const token = localStorage.getItem('token')
+  const decode = jwt_decode(token)
+
     
    const fileInputRef = useRef(null);
+
    const handleFileChange = (event) => {
     const selectedImage = event.target.files[0];
      setnoteBudget({
@@ -26,21 +30,15 @@ const TripPlanningTable = () => {
   const handleEditClick = () => {
      fileInputRef.current.click();
   };
-    
+ 
     const [notebuget, setnoteBudget] = useState({
-         note:'',
-         budget:'',
+         Note:'',
+         Budget:'',
          place_image:null,
     });
     
-    const imageUrl = notebuget.place_image ? URL.createObjectURL(notebuget.place_image) : placeImage;
+    const {Note, Budget}= notebuget
 
-    const { note , budget } = notebuget;
- 
-    console.log('note and budget',notebuget)
-
-
-    
     const [entries, setEntries] = useState([
     {
       place: '',
@@ -82,26 +80,59 @@ const TripPlanningTable = () => {
   
     
       const  mainPlace = useSelector((state) => state.user.MainPlace);
-      const MainPlace = {
-        ...mainPlace,
-        ...notebuget,
-      }
+      const main_place= mainPlace.main_place
+      const start_date = mainPlace.start_date
+      ? new Date(mainPlace.start_date).toISOString().split('T')[0]
+      : '';
+    
+       const end_date = mainPlace.end_date
+      ? new Date(mainPlace.end_date).toISOString().split('T')[0]
+      : '';
+      
+      const note = notebuget.Note
+      const budget = notebuget.Budget
+      const imageUrl = notebuget.place_image ? URL.createObjectURL(notebuget.place_image) : placeImage;
+      
    
-      console.log('afnas',MainPlace);
+      // console.log('afnas',MainPlace);
       const handleSaveEntries = async () => {
- 
-      try {
-        // Send mainPlace and tripPlanningData to the backend
-        const response = await TripPlanning({MainPlace});
-        // Handle success or errors based on the response from the backend
-        console.log("responsse", response)
-      } catch (error) {
-        // Handle API request errors
-        console.log("res",error)
-      }
-    };
-
- 
+        const formData = new FormData();
+        
+        formData.append("user", decode.user_id);
+        formData.append("main_place", main_place);
+        formData.append("start_date", start_date);
+        formData.append("end_date", end_date);
+        formData.append("note", note);
+        formData.append("budget", budget);
+        
+        if (notebuget.place_image) {
+          formData.append("place_image", notebuget.place_image);
+        }
+        
+        entries.forEach((entry, index) => {
+          formData.append(`trip_planning[${index}][place]`, entry.place);
+          formData.append(`trip_planning[${index}][description]`, entry.description);
+          formData.append(`trip_planning[${index}][date]`, entry.date);
+          
+          if (entry.image) {
+            formData.append(`trip_planning[${index}][image]`, entry.image);
+          }
+        });
+        for (const [key, value] of formData.entries()) {
+          console.log('dexo',key, value);
+        }
+        try {
+          const response = await TripPlanning(formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          console.log("response", response);
+        } catch (error) {
+          console.log("error", error);
+        }
+      };
+      
 
     return (
     <div>
@@ -113,14 +144,19 @@ const TripPlanningTable = () => {
        {/* main_place image  */}
 
       <div className="relative">
-      <input
-        id="file-input"
-        type="file"
-        accept="image/*"
-        onChange={handleFileChange}
-        className="hidden"
-        ref={fileInputRef}
-      />
+      
+      <form encType="multipart/form-data">
+        <input
+          type="file"
+          name="place_image"
+          accept="image/*"
+          onChange={handleFileChange}
+          ref={fileInputRef}
+          className="hidden"
+
+        />
+      </form>
+
       
       {/* Image */}
       <img
@@ -128,9 +164,8 @@ const TripPlanningTable = () => {
         src={imageUrl}
         alt="nature image"
         onClick={handleEditClick}
-
        />
-    </div>
+      </div>
 
         <div className="absolute top-32 lg:ml-32  h-44 ml-16    w-8/12  flex justify-items-center z-20">
           <PlaceCard />
@@ -141,8 +176,8 @@ const TripPlanningTable = () => {
           <Textarea
             size="md"
             label="Note"
-            value={note}
-            onChange={(e) => setnoteBudget({...notebuget,note:e.target.value})}
+            value={Note}
+            onChange={(e) => setnoteBudget({...notebuget,Note:e.target.value})}
             />
         </div>
 
@@ -218,8 +253,8 @@ const TripPlanningTable = () => {
         <Input
           type="text"
           placeholder="Enter budget"
-          value={budget}
-          onChange={(e) => setnoteBudget({...notebuget,budget:e.target.value})}
+          value={Budget}
+          onChange={(e) => setnoteBudget({...notebuget,Budget:e.target.value})}
           className="w-full px-3 py-2 border rounded-lg"
         />
       </div>

@@ -45,9 +45,9 @@ const UserGoogleSignup = (value) => {
   
 
   // Create TripPlan
-  const TripPlanning = (MainPlace) => {
-    console.log('Data being sent to the backend:', MainPlace);
-    return userAxiosInstant.post("travel_manager/main-place/",MainPlace, {
+  const TripPlanning = (value) => {
+    console.log('Data being sent to the backend:', value);
+    return userAxiosInstant.post("travel_manager/main-place/",value, {
     withCredentials: true,
   });
   };

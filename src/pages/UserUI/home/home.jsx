@@ -4,9 +4,11 @@ import MapImage from '../../../assets/image/homeMapStatic.jpg'
 import { SimpleCard } from './raitingCard';
 import { FooterWithSocialLinks } from '../../../components/footer.jsx/footer';
 import { ComplexNavbar } from '../../../components/Navbar/navbar';
+import { useNavigate } from 'react-router-dom';
 
 
 function Home() {
+  const navigate = useNavigate()
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {
@@ -18,6 +20,11 @@ function Home() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+
+  const handleNavigate =() =>{
+    navigate('location_plan/')
+  }
 
   return (
  
@@ -37,7 +44,7 @@ function Home() {
             in a free travel app designed for vacations
             & road trips
           </div>
-          <button className="rounded-full bg-[#f75940] text-white h-12 w-36 lg:ml-24 mt-6 mx-auto block  ">Start planning</button>
+          <button onClick={handleNavigate} className="rounded-full bg-[#f75940] text-white h-12 w-36 lg:ml-24 mt-6 mx-auto block  ">Start planning</button>
 
         </div>
         <div className="lg:w-3/5 sm:w-full">
