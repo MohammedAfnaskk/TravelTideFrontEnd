@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux';
             Trip to {place}
           </Typography>
           <Typography className='text-sm'>
-            Start: {startDate} End: {endDate}
+            Start: {startDate} &nbsp; End: {endDate}
 
           </Typography>
         </CardBody>

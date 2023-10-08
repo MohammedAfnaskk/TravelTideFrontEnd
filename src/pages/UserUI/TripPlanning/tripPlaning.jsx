@@ -1,45 +1,46 @@
-import React, { useState, useRef ,useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { ComplexNavbar } from "../../NavbarSemi/Nav";
- import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Textarea ,Input} from "@material-tailwind/react";
-import  PlaceCard  from '../../UserUI/TripPlanning/PlaceCard';
- import placeImage from '../../../assets/image/adminbg.jpg';
- import jwt_decode from 'jwt-decode'
-
- import { useDispatch, useSelector } from 'react-redux';
- import { TripPlanning } from '../../../services/userApi';
+import { Textarea, Input } from "@material-tailwind/react";
+import PlaceCard from '../../UserUI/TripPlanning/PlaceCard';
+import placeImage from '../../../assets/image/adminbg.jpg';
+import jwt_decode from 'jwt-decode'
+import { useDispatch, useSelector } from 'react-redux';
+import { TripPlanning, TripPlanningData } from '../../../services/userApi';
+import { useNavigate } from 'react-router-dom';
 
 
 const TripPlanningTable = () => {
- 
+  const navigate = useNavigate()
+
   const token = localStorage.getItem('token')
   const decode = jwt_decode(token)
 
-    
-   const fileInputRef = useRef(null);
 
-   const handleFileChange = (event) => {
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (event) => {
     const selectedImage = event.target.files[0];
-     setnoteBudget({
+    setnoteBudget({
       ...notebuget,
       place_image: selectedImage,
     });
   };
-  
-  const handleEditClick = () => {
-     fileInputRef.current.click();
-  };
- 
-    const [notebuget, setnoteBudget] = useState({
-         Note:'',
-         Budget:'',
-         place_image:null,
-    });
-    
-    const {Note, Budget}= notebuget
 
-    const [entries, setEntries] = useState([
+  const handleEditClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const [notebuget, setnoteBudget] = useState({
+    Note: '',
+    Budget: '',
+    place_image: null,
+  });
+
+  const { Note, Budget } = notebuget
+
+  const [entries, setEntries] = useState([
     {
       place: '',
       description: '',
@@ -48,149 +49,169 @@ const TripPlanningTable = () => {
     },
   ]);
 
-    console.log('tripPlannig',entries)
+  console.log('tripPlannig', entries)
 
-    const handleAddEntry = () => {
-      const newEntry = {
-        place: '',
-        description: '',
-        image: null,
-        date: '',
-      };
-      setEntries([...entries, newEntry]);
+  const handleAddEntry = () => {
+    const newEntry = {
+      place: '',
+      description: '',
+      image: null,
+      date: '',
     };
-  
-    const handleDeleteEntry = (index) => {
-        const updatedEntries = [...entries];
-        updatedEntries.splice(index, 1);
-        setEntries(updatedEntries);
-      };
-    
-    const handleInputChange = (event, index, field) => {
-      const updatedEntries = [...entries];
-      updatedEntries[index][field] = event.target.value;
-      setEntries(updatedEntries);
-    };
-  
-    const handleImageChange = (event, index) => {
-      const updatedEntries = [...entries];
-      updatedEntries[index].image = event.target.files[0]; // Assuming you want to store the first selected image
-      setEntries(updatedEntries);
-    };
-  
-    
-      const  mainPlace = useSelector((state) => state.user.MainPlace);
-      const main_place= mainPlace.main_place
-      const start_date = mainPlace.start_date
-      ? new Date(mainPlace.start_date).toISOString().split('T')[0]
-      : '';
-    
-       const end_date = mainPlace.end_date
-      ? new Date(mainPlace.end_date).toISOString().split('T')[0]
-      : '';
+    setEntries([...entries, newEntry]);
+  };
+
+  const handleDeleteEntry = (index) => {
+    const updatedEntries = [...entries];
+    updatedEntries.splice(index, 1);
+    setEntries(updatedEntries);
+  };
+
+  const handleInputChange = (event, index, field) => {
+    const updatedEntries = [...entries];
+    updatedEntries[index][field] = event.target.value;
+    setEntries(updatedEntries);
+  };
+
+  const handleImageChange = (event, index) => {
+    const updatedEntries = [...entries];
+    updatedEntries[index].image = event.target.files[0]; // Assuming you want to store the first selected image
+    setEntries(updatedEntries);
+  };
+
+
+  const mainPlace = useSelector((state) => state.user.MainPlace);
+  const main_place = mainPlace.main_place
+  const start_date = mainPlace.start_date
+    ? new Date(mainPlace.start_date).toISOString().split('T')[0]
+    : '';
+
+  const end_date = mainPlace.end_date
+    ? new Date(mainPlace.end_date).toISOString().split('T')[0]
+    : '';
+
+  const note = notebuget.Note
+  const budget = notebuget.Budget
+  const imageUrl = notebuget.place_image ? URL.createObjectURL(notebuget.place_image) : placeImage;
+
+  const handleSaveEntries = async () => {
+    const location = useLocation();
+      const id = location.state && location.state.id;
+      console.log(id);
+    const formData = new FormData();
+
+    formData.append("user", decode.user_id);
+    formData.append("main_place", main_place);
+    formData.append("start_date", start_date);
+    formData.append("end_date", end_date);
+    formData.append("note", note);
+    formData.append("budget", budget);
+
+    // Check if 'notebudget.place_image' exists and add it to formData
+    if (notebuget.place_image) {
+      formData.append("place_image", notebuget.place_image);
+    }
+
+    try {
+      const response = await TripPlanning(formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("response", response);
       
-      const note = notebuget.Note
-      const budget = notebuget.Budget
-      const imageUrl = notebuget.place_image ? URL.createObjectURL(notebuget.place_image) : placeImage;
-      
-   
-      // console.log('afnas',MainPlace);
-      const handleSaveEntries = async () => {
-        const formData = new FormData();
-        
-        formData.append("user", decode.user_id);
-        formData.append("main_place", main_place);
-        formData.append("start_date", start_date);
-        formData.append("end_date", end_date);
-        formData.append("note", note);
-        formData.append("budget", budget);
-        
-        if (notebuget.place_image) {
-          formData.append("place_image", notebuget.place_image);
-        }
-        
-        entries.forEach((entry, index) => {
-          formData.append(`trip_planning[${index}][place]`, entry.place);
-          formData.append(`trip_planning[${index}][description]`, entry.description);
-          formData.append(`trip_planning[${index}][date]`, entry.date);
-          
+      if (response.status === 201) {
+        const formDataArray = entries.map((entry) => {
+          const entryFormData = new FormData();
+          entryFormData.append('place', entry.place);
+          entryFormData.append('description', entry.description);
+          entryFormData.append('date', entry.date);
+          entryFormData.append('maintable_id', response.data.id);
+
+          // Check if 'entry.image' exists and add it to entryFormData
           if (entry.image) {
-            formData.append(`trip_planning[${index}][image]`, entry.image);
+            entryFormData.append('image', entry.image);
           }
+
+          return entryFormData;
         });
-        for (const [key, value] of formData.entries()) {
-          console.log('dexo',key, value);
-        }
-        try {
-          const response = await TripPlanning(formData, {
+        for (const entryFormData of formDataArray) {
+          const response = await TripPlanningData(entryFormData, {
             headers: {
-              "Content-Type": "multipart/form-data",
+              'Content-Type': 'multipart/form-data',
             },
           });
-          console.log("response", response);
-        } catch (error) {
-          console.log("error", error);
+          console.log('Response:', response);
         }
-      };
-      
+      }
+      navigate('/user/trip-page/');
+    } catch (error) {
+      console.log("response trip data", error);
+    }
 
-    return (
+
+  }
+
+
+
+
+  return (
     <div>
-        
+
       <ComplexNavbar />
 
       {/* Add more content */}
       <div className="relative overflow-y-auto">
-       {/* main_place image  */}
+        {/* main_place image  */}
 
-      <div className="relative">
-      
-      <form encType="multipart/form-data">
-        <input
-          type="file"
-          name="place_image"
-          accept="image/*"
-          onChange={handleFileChange}
-          ref={fileInputRef}
-          className="hidden"
+        <div className="relative">
 
-        />
-      </form>
+          <form encType="multipart/form-data">
+            <input
+              type="file"
+              name="place_image"
+              accept="image/*"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+              className="hidden"
 
-      
-      {/* Image */}
-      <img
-        className="w-full lg:h-64 object-cover relative z-10 cursor-pointer"
-        src={imageUrl}
-        alt="nature image"
-        onClick={handleEditClick}
-       />
-      </div>
+            />
+          </form>
+
+
+          {/* Image */}
+          <img
+            className="w-full lg:h-64 object-cover relative z-10 cursor-pointer"
+            src={imageUrl}
+            alt="nature image"
+            onClick={handleEditClick}
+          />
+        </div>
 
         <div className="absolute top-32 lg:ml-32  h-44 ml-16    w-8/12  flex justify-items-center z-20">
           <PlaceCard />
         </div>
-        
-         <div className=" px-10 mt-16">
+
+        <div className=" px-10 mt-16">
           <p className="mb-2 font-bold">Note</p>
           <Textarea
             size="md"
             label="Note"
             value={Note}
-            onChange={(e) => setnoteBudget({...notebuget,Note:e.target.value})}
-            />
+            onChange={(e) => setnoteBudget({ ...notebuget, Note: e.target.value })}
+          />
         </div>
 
-         <hr className="w-18 border-t border-gray-500 mt-10 " />
+        <hr className="w-18 border-t border-gray-500 mt-10 " />
 
         {entries.map((entry, index) => (
           <div key={index} className="mt-10">
-            
+
             <div className="mb-8   inline-flex  ml-10">
-           <button onClick={() => handleDeleteEntry(index)} className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded">
-            <FontAwesomeIcon icon={faTrash} /> {/* Use the delete icon here */}
-             </button>
-            </div> 
+              <button onClick={() => handleDeleteEntry(index)} className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded">
+                <FontAwesomeIcon icon={faTrash} /> {/* Use the delete icon here */}
+              </button>
+            </div>
             <div className="  px-10">
               <p className="mb-2 font-bold">Place</p>
               <Input
@@ -200,7 +221,7 @@ const TripPlanningTable = () => {
                 onChange={(e) => handleInputChange(e, index, 'place')}
               />
             </div>
-  
+
             <div className="  px-10 mt-4">
               <p className="mb-2 font-bold">Description</p>
               <Textarea
@@ -210,7 +231,7 @@ const TripPlanningTable = () => {
                 onChange={(e) => handleInputChange(e, index, 'description')}
               />
             </div>
-  
+
             <div className="w-96 px-10 mt-4">
               <label htmlFor={`imageInput-${index}`} className="block text-gray-700 text-sm font-bold">
                 Select an Image:
@@ -222,7 +243,7 @@ const TripPlanningTable = () => {
                 onChange={(e) => handleImageChange(e, index)}
               />
             </div>
-  
+
             <div className="  px-10 mt-4">
               <p className="mb-2 font-bold">Date</p>
               <Input
@@ -233,47 +254,47 @@ const TripPlanningTable = () => {
               />
             </div>
 
-         {/* Add another form */}
-        <div className="mt-10   px-10">
-        <button onClick={handleAddEntry} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-        + Add Another Entry
-        </button>
-        </div>
+            {/* Add another form */}
+            <div className="mt-10   px-10">
+              <button onClick={handleAddEntry} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                + Add Another Entry
+              </button>
+            </div>
 
-        <hr className="w-18 border-t border-gray-500 mt-10" />
+            <hr className="w-18 border-t border-gray-500 mt-10" />
 
-         </div>
+          </div>
 
         ))}
-  
-    
-          {/* Budget input field */}
-      <div className="mt-4   px-10">
-        <p className="mb-2 font-bold">Budget</p>
-        <Input
-          type="text"
-          placeholder="Enter budget"
-          value={Budget}
-          onChange={(e) => setnoteBudget({...notebuget,Budget:e.target.value})}
-          className="w-full px-3 py-2 border rounded-lg"
-        />
-      </div>
 
-      <div className="mt-12 w-auto px-10 mb-12">
-        <button onClick={handleSaveEntries} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
-          Save All
-        </button>
+
+        {/* Budget input field */}
+        <div className="mt-4   px-10">
+          <p className="mb-2 font-bold">Budget</p>
+          <Input
+            type="text"
+            placeholder="Enter budget"
+            value={Budget}
+            onChange={(e) => setnoteBudget({ ...notebuget, Budget: e.target.value })}
+            className="w-full px-3 py-2 border rounded-lg"
+          />
+        </div>
+
+        <div className="mt-12 w-auto px-10 mb-12">
+          <button onClick={handleSaveEntries} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+            Save All
+          </button>
+        </div>
+
       </div>
-    
     </div>
-      </div>
- 
-    );
-  };
+
+  );
+};
 
 export default TripPlanningTable
-   
-   
-  
+
+
+
 
 

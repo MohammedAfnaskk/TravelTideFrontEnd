@@ -18,7 +18,7 @@ const TokenRefresh = (value) => {
     })
     .catch((error) => error.response);  
   };
-  
+
 
 // User Google signup
 const UserGoogleSignup = (value) => {
@@ -33,7 +33,7 @@ const UserGoogleSignup = (value) => {
         throw error; 
       });   
   };
-  
+
   // User Google signin
   const UserGoogleSignin = (value) => {
     const values = {
@@ -43,7 +43,6 @@ const UserGoogleSignup = (value) => {
     return userAxiosInstant.post("account/token/", values, { withCredentials: true });
   };
   
-
   // Create TripPlan
   const TripPlanning = (value) => {
     console.log('Data being sent to the backend:', value);
@@ -52,7 +51,16 @@ const UserGoogleSignup = (value) => {
   });
   };
 
- 
+
+  const TripPlanningData = (value) => {
+    console.log('Data being sent to the backend:', value);
+    return userAxiosInstant.post("travel_manager/trip-planning/",value, {
+    withCredentials: true,
+  });
+  };
+  
+  
+//------------------------------ GET METHODS----------------------------------------------
 
 export {
   userSignin,
@@ -60,5 +68,5 @@ export {
   UserGoogleSignin,
   TokenRefresh,
   TripPlanning,     
-
+  TripPlanningData,
 };
