@@ -23,7 +23,7 @@ function Home() {
   }, []);
 
   const handleNavigate =() =>{
-    navigate('location_plan/')
+    navigate('/guide/location_plan/')
   }
 
   return (

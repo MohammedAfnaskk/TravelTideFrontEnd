@@ -11,18 +11,22 @@ import {
    
   Bars2Icon,
 } from "@heroicons/react/24/outline";
+import { Link } from 'react-router-dom'; 
  
 
 // nav list component
 const navListItems = [
     {
       label: "Home",
+      path: "/guide/",
+
      },
     {
       label: "Travel Guide",
      },
      {
       label: "Plan a Trip",
+      path: "/guide/trip-join"
      },
   
     <svg
@@ -60,7 +64,7 @@ function NavList() {
             >
   
               <MenuItem className="flex gap-2 lg:rounded-full">
-                {item.label}
+              <Link to={item.path}> {item.label} </Link>
               </MenuItem>
             </Typography>
            
@@ -90,7 +94,7 @@ export function ComplexNavbar({}) {
   
   
     return (
-      <Navbar className="mx-auto max-w-full  p-3 pl-6 rounded-none">
+      <Navbar className="mx-auto  w-7/12 p-3 pl-6 rounded-none  z-50" style={{ position:"fixed"}}>
         <div className="relative mx-auto flex items-center text-blue-gray-900">
           <Typography
             as="a"

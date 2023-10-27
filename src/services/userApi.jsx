@@ -58,6 +58,23 @@ const UserGoogleSignup = (value) => {
     withCredentials: true,
   });
   };
+
+  const InviteFriends = (value) => {
+    console.log('Data being sent to the backend:', value);
+    return userAxiosInstant.post("travel_manager/invite-friends/",value, {
+    withCredentials: true,
+  });
+  };
+
+
+  const Payment = (value) => {
+    console.log('Data being sent to the backend:', value);
+    return userAxiosInstant.post("payments/",value, {
+    withCredentials: true,
+  });
+  };
+  
+  
   
   
 //------------------------------ GET METHODS----------------------------------------------
@@ -69,4 +86,6 @@ export {
   TokenRefresh,
   TripPlanning,     
   TripPlanningData,
+  InviteFriends,
+  Payment,
 };

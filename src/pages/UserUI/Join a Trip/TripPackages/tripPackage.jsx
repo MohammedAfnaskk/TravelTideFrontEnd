@@ -22,8 +22,7 @@ const TripPackageList = () => {
     <div className="mt-9 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10  lg:mx-44">
       {mainTrips.map(
         (trip, index) => (
-          console.log("-------------><-------", trip.id),
-          (
+           (
             <Link
               to={{
                 pathname: `/user/trip-package-details/${trip.id}`,
@@ -37,12 +36,14 @@ const TripPackageList = () => {
                 src={trip.place_image}
                 alt="Sunset in the mountains"
               />
+
               <div className="font-bold text-xl mb-2 mt-2">
                 {trip.main_place}
               </div>
               <p className="text-black -700 font-bold">
                 Guide: {trip.user_name}
               </p>
+
               <p
                 className="text-gray-700 text-base mt-2"
                 style={{ maxHeight: "3em", overflow: "hidden" }}

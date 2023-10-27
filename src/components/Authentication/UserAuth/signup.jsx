@@ -33,7 +33,6 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
     role: "",
   });
 
-
   //  For loading
   const [loading, setLoading] = useState(false);
   const handleLoading = () => setLoading((cur) => !cur);
@@ -42,7 +41,6 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
   const [guser, setgUser] = useState([]);
   console.log(user);
  
-
   // Validations
   const isValidEmail = (email) => {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;

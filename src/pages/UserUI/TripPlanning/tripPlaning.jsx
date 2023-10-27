@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { ComplexNavbar } from "../../NavbarSemi/Nav";
+import { ComplexNavbar } from "../NavbarSemi/Nav";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Textarea, Input } from "@material-tailwind/react";

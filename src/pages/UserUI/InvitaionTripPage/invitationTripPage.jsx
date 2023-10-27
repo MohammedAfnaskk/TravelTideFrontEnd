@@ -3,41 +3,66 @@ import MapComponent from "../../GoogleMap/googleMap";
 import { Card, CardBody, CardFooter, Typography } from "@material-tailwind/react";
 import PlaceCard from './PlaceListCard';
 import { userAxiosInstant } from "../../../utils/axiosUtils";
-import { useLocation } from 'react-router-dom';
-import { ComplexNavbar } from '../../NavbarSemi/Nav';
-
+import { ComplexNavbar } from '../NavbarSemi/Nav';
+import { useParams } from 'react-router-dom';
+import FooterWithSocialLinks from "../../../components/footer/footer";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
   
- 
-export const TripDetailsPage = () => {
-  const location = useLocation();
-  const id =5
-  // location.state && location.state.id;
 
+export const TripDetailsPage = () => {
+  const {emailId,tripDataId } = useParams();
   const [tripDetails, setTripDetails] = useState(null);
+  const [isJoined, setJoined] = useState(false);
   const [error, setError] = useState(null); 
 
-   
+ 
   useEffect(() => {
      userAxiosInstant
-      .get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
+      .get(`/travel_manager/MainPlaceViewSetsingleView/${tripDataId}`)
       .then((response) => {
-        console.log('Response Data:', response.data); // Log the data received
+        console.log('Response Data:', response.data); 
         setTripDetails(response.data);
+
       })
       .catch((error) => {
         console.error(error);
         setError(error);
-
       });
-    
-  }, [id]); 
 
+    
+
+    }, []);
+
+  
+    const handleAction = (emailId) => {
+      const requestData = {
+        updatedStatus: "accepted"
+      };
+    
+      userAxiosInstant
+        .patch(`/travel_manager/users_invitation/${emailId}/`,requestData
+        )
+        .then((response) => {
+          console.log(response.data);
+          toast.success("Joined successfully.");
+          setJoined(true); 
+
+        })
+        .catch((error) => {
+          console.error("Error accepting invitation", error);
+          toast.error("Failed to accept invitation. Please try again.");
+
+        });
+ 
+    }
+    
+        
 
     return (
       <>
       <ComplexNavbar/>
-      
-
+    
         <div className="relative overflow-y-auto">
         {error && <p>Error fetching trip details: {error.message}</p>}
         {tripDetails && (
@@ -48,8 +73,9 @@ export const TripDetailsPage = () => {
                 alt="nature image"
               />
               <div className="absolute top-56 lg:ml-32 h-44 ml-16 w-8/12 flex justify-items-center z-20">
-                <PlaceCard tripDetails={tripDetails} />
+                <PlaceCard tripDetails={tripDetails}/>
               </div>
+
 
               <div className='mt-16 ml-96'>
               <Card className="w-80 bg-white hover:bg-blue-gray-50">
@@ -57,12 +83,20 @@ export const TripDetailsPage = () => {
                   <Typography color="blue-gray" className="mb-4 font-bold text-2xl  ">
                     Budget: ₹ {tripDetails.budget}
                   </Typography>
-                  {/* <div className="mt-12 w-auto px-10 mb-12"> */}
-                  <div className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 ml-40 rounded-full">
+                  
+                  {isJoined?(
+                   <div
+                   className="text-center font-bold bg-gray-200 rounded-lg text-blue-gray-900 "
+                 >
+                  Welcome to the trip - you're now a part of it
+                 </div>
+                  ):(
+                   <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 ml-40 rounded-full"    onClick={() => handleAction(emailId)}>
                     Join Now
-                  </div>
-                  {/* </div> */}
-                </CardBody>
+                  </button>
+
+                     )}
+                 </CardBody>
               </Card>
              </div>
               <hr className="w-18 border-t border-gray-500 mt-24 mb-9 px-9" />
@@ -103,6 +137,7 @@ export const TripDetailsPage = () => {
 
             </div>
            )}
+        <FooterWithSocialLinks />
 
          </div>
       </>
@@ -110,7 +145,7 @@ export const TripDetailsPage = () => {
     }
    
 
-const TripPage = () => {
+const InviteeTripPage = () => {
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     useEffect(() => {
         const handleResize = () => {
@@ -140,5 +175,5 @@ const TripPage = () => {
   );
 };
 
-export default TripPage;
+export default InviteeTripPage;
  

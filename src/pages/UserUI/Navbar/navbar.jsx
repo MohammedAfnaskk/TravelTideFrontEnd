@@ -1,4 +1,4 @@
-import React ,{useState} from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   MobileNav,
@@ -21,54 +21,51 @@ import {
   PowerIcon,
   Bars2Icon,
 } from "@heroicons/react/24/outline";
-import  Login from "../../../components/Authentication/UserAuth/login";
+import Login from "../../../components/Authentication/UserAuth/login";
 import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom'; 
-
-
-// profile menu component
-const profileMenuItems = [
-  {
-    label: "My Profile",
-    icon: UserCircleIcon,
-  },
-  {
-    label: "Edit Profile",
-    icon: Cog6ToothIcon,
-  },
-  {
-    label: "Inbox",
-    icon: InboxArrowDownIcon,
-  },
-  {
-    label: "Help",
-    icon: LifebuoyIcon,
-  },
-  {
-    label: "Sign Out",
-    icon: PowerIcon,
-  },
-];
- 
-
-
+import { Link } from "react-router-dom";
 
 function ProfileMenu() {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
- 
+
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogout = () => {
-    // Remove the authentication token from local storage
     localStorage.removeItem("token");
-    // Set isLoggedIn to false
     isAuthenticated();
-    
+    navigate('/user')
     window.location.reload();
-
   };
-  
-  
+
+  const profileMenuItems = [
+    {
+      label: "My Profile",
+      icon: UserCircleIcon,
+      path: "/user/user-profile/",
+    },
+    {
+      label: "Edit Profile",
+      icon: Cog6ToothIcon,
+      path: "/edit-profile", // Define the path for Edit Profile
+    },
+    {
+      label: "Inbox",
+      icon: InboxArrowDownIcon,
+      path: "/inbox", // Define the path for Inbox
+    },
+    {
+      label: "Help",
+      icon: LifebuoyIcon,
+      path: "/help", // Define the path for Help
+    },
+    {
+      label: "Sign Out",
+      icon: PowerIcon,
+      onClick: handleLogout,
+    },
+  ];
+
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
       <MenuHandler>
@@ -93,12 +90,20 @@ function ProfileMenu() {
         </Button>
       </MenuHandler>
       <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon }, key) => {
+        {profileMenuItems.map(({ label, icon, path, onClick }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
             <MenuItem
               key={label}
-              onClick={closeMenu}
+              onClick={() => {
+                closeMenu();
+                if (path) {
+                  // You can use either Link or navigate based on whether the item has a path
+                  navigate(path);
+                } else if (onClick) {
+                  onClick();
+                }
+              }}
               className={`flex items-center gap-2 rounded ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
@@ -114,10 +119,6 @@ function ProfileMenu() {
                 variant="small"
                 className="font-normal"
                 color={isLastItem ? "red" : "inherit"}
-                onClick={() => {
-                   handleLogout();
-                }}
-                clas
               >
                 {label}
               </Typography>
@@ -129,54 +130,50 @@ function ProfileMenu() {
   );
 }
 
- 
- 
 // nav list component
 const navListItems = [
   {
     label: "Home",
     path: "/user/",
-
-   },
+  },
   {
     label: "Travel guides",
-   },
+  },
   {
     label: "Join a trip",
-    path: "/user/"
-   },
-   {
-    
-  search: <div className="ml-24">
-  <Input
-    type="search"
-    label="Type here..."
-     containerProps={{
-      className: "min-w-auto",
-    }}
-  />
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6 text-gray-400 absolute right-2 top-2" // Position the icon using absolute positioning
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    onClick={() => {
-      // Handle the search icon click event here
-    }}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M21 21l-6-6M9 2a7 7 0 110 14 7 7 0 010-14z"
-    />
-  </svg>
-  </div> 
+    path: "/user/trip-join",
+  },
+  {
+    search: (
+      <div className="ml-24">
+        <Input
+          type="search"
+          label="Type here..."
+          containerProps={{
+            className: "min-w-auto",
+          }}
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6 text-gray-400 absolute right-2 top-2" // Position the icon using absolute positioning
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          onClick={() => {
+            // Handle the search icon click event here
+          }}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21l-6-6M9 2a7 7 0 110 14 7 7 0 010-14z"
+          />
+        </svg>
+      </div>
+    ),
   },
 ];
- 
-
 
 function NavList() {
   return (
@@ -190,17 +187,11 @@ function NavList() {
             color="blue-gray"
             className="font-bold"
           >
-
             <MenuItem className="flex gap-2 lg:rounded-full">
-            <Link to={item.path}> {item.label} </Link>
-
-             </MenuItem>
+              <Link to={item.path}> {item.label} </Link>
+            </MenuItem>
           </Typography>
-          {item.search && (
-            <div className="relative">
-              {item.search}
-            </div>
-          )}
+          {item.search && <div className="relative">{item.search}</div>}
         </div>
       ))}
     </div>
@@ -210,33 +201,27 @@ function NavList() {
 export default NavList;
 
 const isAuthenticated = () => {
-  const token = localStorage.getItem('token');
-  if (token){
-    return true
+  const token = localStorage.getItem("token");
+  if (token) {
+    return true;
+  } else {
+    return false;
   }
-  else{
-    return false
-
-  }
-   
 };
 
- 
-export function ComplexNavbar({}) {
-  const navigate = useNavigate()
+export function UserComplexNavbar({}) {
+  const navigate = useNavigate();
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState();
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
- 
+
   React.useEffect(() => {
     window.addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false),
+      () => window.innerWidth >= 960 && setIsNavOpen(false)
     );
-    
   }, []);
-
 
   return (
     <Navbar className="mx-auto max-w-full  p-3 pl-6 rounded-none  ">
@@ -245,7 +230,6 @@ export function ComplexNavbar({}) {
           as="a"
           href="#"
           className="text-2xl font-bold  text-[#f75940] hover:text-[#e54632] lg:text-3xl transition duration-300 ease-in-out ml-2 lg:ml-24 "
-        
         >
           Travel Tide
         </Typography>
@@ -262,17 +246,17 @@ export function ComplexNavbar({}) {
           <Bars2Icon className="h-6 w-6" />
         </IconButton>
 
-        {isAuthenticated()? (
-          <ProfileMenu/>
-
+        {isAuthenticated() ? (
+          <ProfileMenu />
         ) : (
           <div className="ml-auto mr-2 ">
-          <Login />
-          <Button
-          onClick={()=>navigate('/user_role')}
-            className="bg-[#f75940] rounded-full text-white py-2 px-4">
-            Sign up
-          </Button>
+            <Login />
+            <Button
+              onClick={() => navigate("/user_role")}
+              className="bg-[#f75940] rounded-full text-white py-2 px-4"
+            >
+              Sign up
+            </Button>
           </div>
         )}
       </div>

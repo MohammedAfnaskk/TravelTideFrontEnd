@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import MapComponent from "../../GoogleMap/googleMap";
-import { ComplexNavbar } from "../../GuideUI/NavbarSemi/Nav";
 import {
   Card,
   CardBody,
@@ -8,21 +7,22 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import PlaceCard from "./PlaceListCard";
-import { GuideAxiosInstant } from "../../../utils/axiosUtils";
+import { userAxiosInstant } from "../../../utils/axiosUtils";
 import { useLocation } from "react-router-dom";
-import Footer from "../../../components/footer/footer";
+import { ComplexNavbar } from "../NavbarSemi/Nav";
+import FooterWithSocialLinks from "../../../components/footer/footer";
 
 export const TripDetailsPage = () => {
   const location = useLocation();
   const id = location.state && location.state.id;
-
   const [tripDetails, setTripDetails] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    GuideAxiosInstant.get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
+    userAxiosInstant
+      .get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
       .then((response) => {
-        console.log("Response Data:", response.data);
+        console.log("Response Data:", response.data); // Log the data received
         setTripDetails(response.data);
       })
       .catch((error) => {
@@ -31,39 +31,46 @@ export const TripDetailsPage = () => {
       });
   }, [id]);
 
+ 
+
+
+
   return (
     <>
+      <ComplexNavbar />
+
       <div className="relative overflow-y-auto">
         {error && <p>Error fetching trip details: {error.message}</p>}
         {tripDetails && (
           <div>
-            <ComplexNavbar />
-
             <img
-              className="w-full h-96 object-cover relative z-10"
+              className="w-full lg:h-96 object-cover relative z-10"
               src={tripDetails.place_image}
               alt="nature image"
             />
             <div className="absolute top-56 lg:ml-32 h-44 ml-16 w-8/12 flex justify-items-center z-20">
               <PlaceCard tripDetails={tripDetails} />
             </div>
-            <hr className="w-18 border-t border-gray-500 mt-24 mb-9 px-9" />
 
-            <div className=" rounded-lg bg-gray-300 p-4 text-black grid grid-cols-2 gap-80 mx-20">
-              <div className="col-span-1">
-                <div className="text-4xl font-semibold mt-7 ml-10">Budget</div>
-                <div className="text-3xl font-bold mt-2 ml-28">
-                  ₹{tripDetails.budget}
-                </div>
-              </div>
-
-              <div className="col-span-1">
-                <div className="text-lg font-semibold mt-7">Payment Option</div>
-                <div className="text-base">Credit Card</div>
-              </div>
+            <div className="mt-16 ml-96">
+              <Card className="w-80 bg-white hover:bg-blue-gray-50">
+                <CardBody>
+                  <Typography
+                    color="blue-gray"
+                    className="mb-4 font-bold text-2xl  "
+                  >
+                    Budget: ₹ {tripDetails.budget}
+                  </Typography>
+                  {/* <div className="mt-12 w-auto px-10 mb-12"> */}
+                  <div className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 ml-40 rounded-full">
+                    Join Now
+                  </div>
+ 
+                  {/* </div> */}
+                </CardBody>
+              </Card>
             </div>
-
-            <hr className="w-18 border-t border-gray-500 mt-10 mb-9 px-9" />
+            <hr className="w-18 border-t border-gray-500 mt-24 mb-9 px-9" />
 
             <Card className="w-full">
               <CardBody>
@@ -101,15 +108,15 @@ export const TripDetailsPage = () => {
                   </div>
                 </div>
               ))}
-              <div className="mt-12 w-auto px-10 mb-12">
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
-                  Edit TripPlan
-                </button>
-              </div>
-              <Footer />
             </div>
           </div>
         )}
+        <div className="mt-12 w-auto px-10 mb-12">
+          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+            Edit TripPlan
+          </button>
+        </div>
+        <FooterWithSocialLinks />
       </div>
     </>
   );
@@ -134,6 +141,7 @@ const TripPage = () => {
         <div className=" lg:w-7/12">
           <TripDetailsPage />
         </div>
+
         <div className="fixed top-0 right-0  lg:w-5/12">
           {screenWidth >= 750 ? <MapComponent /> : null}
         </div>

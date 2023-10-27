@@ -31,49 +31,50 @@ import  Login from "../../../components/Authentication/UserAuth/login";
 import { useNavigate } from "react-router-dom";
   
 
-// profile menu component
-const profileMenuItems = [
-  {
-    label: "My Profile",
-    icon: UserCircleIcon,
-  },
-  {
-    label: "Edit Profile",
-    icon: Cog6ToothIcon,
-  },
-  {
-    label: "Inbox",
-    icon: InboxArrowDownIcon,
-  },
-  {
-    label: "Help",
-    icon: LifebuoyIcon,
-  },
-  {
-    label: "Sign Out",
-    icon: PowerIcon,
-  },
-];
  
-
  
 
 function ProfileMenu() {
+  const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
- 
+
   const closeMenu = () => setIsMenuOpen(false);
 
-  const handleLogout = () => {
-    // Remove the authentication token from local storage
+  const handleLogout = () => { 
     localStorage.removeItem("token");
-    // Set isLoggedIn to false
     isAuthenticated();
-    
+    navigate('/guide')
     window.location.reload();
+   };
 
-  };
-  
-  
+  const profileMenuItems = [
+    {
+      label: "My Profile",
+      icon: UserCircleIcon,
+      path: '/guide/guide-profile/',
+    },
+    {
+      label: "Edit Profile",
+      icon: Cog6ToothIcon,
+      path: '/edit-profile', // Define the path for Edit Profile
+    },
+    {
+      label: "Inbox",
+      icon: InboxArrowDownIcon,
+      path: '/inbox', // Define the path for Inbox
+    },
+    {
+      label: "Help",
+      icon: LifebuoyIcon,
+      path: '/help', // Define the path for Help
+    },
+    {
+      label: "Sign Out",
+      icon: PowerIcon,
+      onClick: handleLogout,
+    },
+  ];
+
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
       <MenuHandler>
@@ -98,12 +99,20 @@ function ProfileMenu() {
         </Button>
       </MenuHandler>
       <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon }, key) => {
+        {profileMenuItems.map(({ label, icon, path, onClick }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
             <MenuItem
               key={label}
-              onClick={closeMenu}
+              onClick={() => {
+                closeMenu();
+                if (path) {
+                  // You can use either Link or navigate based on whether the item has a path
+                  navigate(path);
+                } else if (onClick) {
+                  onClick();
+                }
+              }}
               className={`flex items-center gap-2 rounded ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
@@ -119,10 +128,6 @@ function ProfileMenu() {
                 variant="small"
                 className="font-normal"
                 color={isLastItem ? "red" : "inherit"}
-                onClick={() => {
-                   handleLogout();
-                }}
-                clas
               >
                 {label}
               </Typography>
@@ -134,12 +139,16 @@ function ProfileMenu() {
   );
 }
 
+
+
  
  
 // nav list component
 const navListItems = [
   {
     label: "Home",
+    path: "/guide/",
+
    },
   {
     label: "Travel guides",

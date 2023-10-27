@@ -17,11 +17,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <PersistGate loading={null} persistor={persistor}>
 
   <GoogleOAuthProvider clientId="1005876540183-gsofr5joh9spfg6soqsula05ej2p4gcs.apps.googleusercontent.com">
-  <BrowserRouter>
-  <ToastContainer />
+  {/* <BrowserRouter> */}
+  <React.StrictMode>
 
+  <ToastContainer />
     <App />
-  </BrowserRouter>
+  </React.StrictMode>
+
+  {/* </BrowserRouter> */}
   </GoogleOAuthProvider>
   </PersistGate>
 

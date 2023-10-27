@@ -3,7 +3,7 @@ import myImage from '../../../assets/image/home.jpg'
 import MapImage from '../../../assets/image/homeMapStatic.jpg'
 import { SimpleCard } from './raitingCard';
 import  Footer from '../../../components/footer/footer';
-import { ComplexNavbar } from '../Navbar/navbar';
+import { UserComplexNavbar } from '../Navbar/navbar';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -23,13 +23,13 @@ function Home() {
 
 
   const handleNavigate =() =>{
-    navigate('location_plan/')
+    navigate('/user/location_plan/')
   }
 
   return (
  
     <div>
-       <ComplexNavbar/>
+       <UserComplexNavbar/>
        <div className="flex flex-col lg:flex-row">
         <div className=" p-2 border-1 sm:w-1/2 md:w-2/5 lg:w-2/5 xl:w-2/5 ">
 
