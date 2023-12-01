@@ -2,10 +2,14 @@
 
     const initialState = {
         MainPlace: {},
+<<<<<<< HEAD
         Invitations: {},
 
      }
 
+=======
+     }
+>>>>>>> origin/main
     const userSlice = createSlice({
         name: 'user',
         initialState,
@@ -17,6 +21,7 @@
             clearMainPlace: (state) =>{
                 state.MainPlace ={};
             },
+<<<<<<< HEAD
             setInvitations:(state, action) =>{
                 state.Invitations =action.payload;
             },
@@ -27,4 +32,10 @@
     });
 
     export const {setMainPlace,clearMainPlace,setInvitations,clearInvitaions} = userSlice.actions;
+=======
+        },
+    });
+
+    export const {setMainPlace,clearMainPlace} = userSlice.actions;
+>>>>>>> origin/main
     export default userSlice.reducer;

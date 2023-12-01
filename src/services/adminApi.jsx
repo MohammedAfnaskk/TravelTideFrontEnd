@@ -1,9 +1,14 @@
 import { adminAxiosInstant } from "../utils/axiosUtils";
+<<<<<<< HEAD
 //----------------post-------------------//
+=======
+
+>>>>>>> origin/main
 const AdminSignin = (values) => {
   return adminAxiosInstant.post("token/", values, { withCredentials: true });
 };
 
+<<<<<<< HEAD
 //--------------------put----patch---------------//
 const GuideBlockUnBlock = (data, id) => {
   return adminAxiosInstant
@@ -58,3 +63,6 @@ export default {
   UsersList,
   GuideList
  };
+=======
+export  {AdminSignin};
+>>>>>>> origin/main

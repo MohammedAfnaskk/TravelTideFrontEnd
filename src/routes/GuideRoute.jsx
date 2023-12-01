@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import GuideHomePage from '../pages/GuideUI/home/home';
+<<<<<<< HEAD
 import LocationPlan from '../pages/GuideUI/TripPlanningGuide/location'
 import TripPage from '../pages/GuideUI/TripPageGuide/tripPage';
 import TripPlanning from '../pages/GuideUI/TripPlanningGuide/mainPage'
@@ -22,6 +23,14 @@ function GuideRoutes() {
 
 
      </Routes>
+=======
+  
+function GuideRoutes() {
+  return (
+    <Routes>
+        <Route path='/' element={<GuideHomePage />} />
+      </Routes>
+>>>>>>> origin/main
   );
 }
 

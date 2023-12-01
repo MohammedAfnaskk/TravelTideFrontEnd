@@ -3,7 +3,11 @@ import { useNavigate,Link } from "react-router-dom";
 import { SignUpWithForm } from "./UserAuth/signup";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+<<<<<<< HEAD
 import { UserComplexNavbar } from "../../pages/UserUI/Navbar/navbar";
+=======
+import { ComplexNavbar } from "../Navbar/navbar";
+>>>>>>> origin/main
 
 function UserRole() {
     const [open, setOpen] = React.useState(false);
@@ -26,7 +30,11 @@ function UserRole() {
   }
   return (
    <>
+<<<<<<< HEAD
    <UserComplexNavbar/>
+=======
+   <ComplexNavbar/>
+>>>>>>> origin/main
     <ToastContainer />
     <div className="h-screen flex flex-col items-start">
        <div className=" bg-white rounded-2xl sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-4/12 sm:border border-dark-800 mx-auto mt-16 grid grid-row-2 gap-2">

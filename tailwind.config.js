@@ -13,7 +13,10 @@ export default withMT({
     extend: {
       height: {
         '550': '550px',
+<<<<<<< HEAD
         '450': '450px',
+=======
+>>>>>>> origin/main
       },
       width:{
         '700': '700px',

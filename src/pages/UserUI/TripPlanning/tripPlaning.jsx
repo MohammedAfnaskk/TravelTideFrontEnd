@@ -1,17 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react'
+<<<<<<< HEAD
 import { ComplexNavbar } from "../NavbarSemi/Nav";
+=======
+import { ComplexNavbar } from "../../NavbarSemi/Nav";
+>>>>>>> origin/main
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Textarea, Input } from "@material-tailwind/react";
 import PlaceCard from '../../UserUI/TripPlanning/PlaceCard';
 import placeImage from '../../../assets/image/adminbg.jpg';
+<<<<<<< HEAD
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+=======
+>>>>>>> origin/main
 import jwt_decode from 'jwt-decode'
 import { useDispatch, useSelector } from 'react-redux';
 import { TripPlanning, TripPlanningData } from '../../../services/userApi';
 import { useNavigate } from 'react-router-dom';
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 const TripPlanningTable = () => {
   const navigate = useNavigate()
 
@@ -23,12 +34,15 @@ const TripPlanningTable = () => {
 
   const handleFileChange = (event) => {
     const selectedImage = event.target.files[0];
+<<<<<<< HEAD
     
   if (!selectedImage) {
     toast.error('Please select a valid image for the Main Place');
     return;
   }
 
+=======
+>>>>>>> origin/main
     setnoteBudget({
       ...notebuget,
       place_image: selectedImage,
@@ -81,12 +95,15 @@ const TripPlanningTable = () => {
   };
 
   const handleImageChange = (event, index) => {
+<<<<<<< HEAD
     const selectedImage = event.target.files[0];
 
     if (!selectedImage) {
       toast.error('Please select a valid image');
       return;
     }
+=======
+>>>>>>> origin/main
     const updatedEntries = [...entries];
     updatedEntries[index].image = event.target.files[0]; // Assuming you want to store the first selected image
     setEntries(updatedEntries);
@@ -108,8 +125,16 @@ const TripPlanningTable = () => {
   const imageUrl = notebuget.place_image ? URL.createObjectURL(notebuget.place_image) : placeImage;
 
   const handleSaveEntries = async () => {
+<<<<<<< HEAD
     const formData = new FormData();
      
+=======
+    const location = useLocation();
+      const id = location.state && location.state.id;
+      console.log(id);
+    const formData = new FormData();
+
+>>>>>>> origin/main
     formData.append("user", decode.user_id);
     formData.append("main_place", main_place);
     formData.append("start_date", start_date);
@@ -117,6 +142,7 @@ const TripPlanningTable = () => {
     formData.append("note", note);
     formData.append("budget", budget);
 
+<<<<<<< HEAD
      if (notebuget.place_image) {
       formData.append("place_image", notebuget.place_image);
     }
@@ -151,6 +177,12 @@ const TripPlanningTable = () => {
       toast.error('Budget field is required');
       return;
     }
+=======
+    // Check if 'notebudget.place_image' exists and add it to formData
+    if (notebuget.place_image) {
+      formData.append("place_image", notebuget.place_image);
+    }
+>>>>>>> origin/main
 
     try {
       const response = await TripPlanning(formData, {
@@ -159,7 +191,11 @@ const TripPlanningTable = () => {
         },
       });
       console.log("response", response);
+<<<<<<< HEAD
       let id =0
+=======
+      
+>>>>>>> origin/main
       if (response.status === 201) {
         const formDataArray = entries.map((entry) => {
           const entryFormData = new FormData();
@@ -167,7 +203,10 @@ const TripPlanningTable = () => {
           entryFormData.append('description', entry.description);
           entryFormData.append('date', entry.date);
           entryFormData.append('maintable_id', response.data.id);
+<<<<<<< HEAD
           id = response.data.id
+=======
+>>>>>>> origin/main
 
           // Check if 'entry.image' exists and add it to entryFormData
           if (entry.image) {
@@ -183,6 +222,7 @@ const TripPlanningTable = () => {
             },
           });
           console.log('Response:', response);
+<<<<<<< HEAD
           
         }
       }
@@ -191,6 +231,13 @@ const TripPlanningTable = () => {
       console.log("response trip data", error);
       toast.error('Error while saving entries');
 
+=======
+        }
+      }
+      navigate('/user/trip-page/');
+    } catch (error) {
+      console.log("response trip data", error);
+>>>>>>> origin/main
     }
 
 

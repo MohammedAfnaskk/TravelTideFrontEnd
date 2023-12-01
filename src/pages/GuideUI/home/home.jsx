@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import myImage from '../../../assets/image/home.jpg'
 import MapImage from '../../../assets/image/homeMapStatic.jpg'
 import { SimpleCard } from './raitingCard';
+<<<<<<< HEAD
 import  Footer from '../../../components/footer/footer';
 import { ComplexNavbar } from '../GuideNavbar/navbar';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +11,13 @@ import { useNavigate } from 'react-router-dom';
 function Home() {
   const navigate = useNavigate()
 
+=======
+import { FooterWithSocialLinks } from '../../../components/footer.jsx/footer';
+import { ComplexNavbar } from '../../../components/Navbar/navbar';
+
+
+function Home() {
+>>>>>>> origin/main
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {
@@ -22,10 +30,13 @@ function Home() {
     };
   }, []);
 
+<<<<<<< HEAD
   const handleNavigate =() =>{
     navigate('/guide/location_plan/')
   }
 
+=======
+>>>>>>> origin/main
   return (
     <div>
       <ComplexNavbar/>
@@ -43,7 +54,11 @@ function Home() {
             in a free travel app designed for vacations
             & road trips
           </div>
+<<<<<<< HEAD
           <button  onClick={handleNavigate} className="rounded-full bg-[#f75940] text-white h-12 w-36 lg:ml-24 mt-6 mx-auto block  ">Start planning</button>
+=======
+          <button className="rounded-full bg-[#f75940] text-white h-12 w-36 lg:ml-24 mt-6 mx-auto block  ">Start planning</button>
+>>>>>>> origin/main
 
         </div>
         <div className="lg:w-3/5 sm:w-full">
@@ -87,7 +102,11 @@ function Home() {
           <SimpleCard />
         </div>
       </div>
+<<<<<<< HEAD
        <Footer/>
+=======
+       <FooterWithSocialLinks/>
+>>>>>>> origin/main
 
       <div>
 

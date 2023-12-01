@@ -7,12 +7,17 @@ const userSignin = (values) => {
   return userAxiosInstant
     .post("account/token/", values, { withCredentials: true })
     .catch((error) => {
+<<<<<<< HEAD
       throw error;
+=======
+      throw error;  
+>>>>>>> origin/main
     });
 };
 
 // User Token refresh
 const TokenRefresh = (value) => {
+<<<<<<< HEAD
   return userAxiosInstant
     .post("account/token/refresh/", value, {
       withCredentials: true,
@@ -102,12 +107,63 @@ const EditPlanningData = (id, value) => {
     withCredentials: true,
   });
 };
+=======
+    return userAxiosInstant.post("account/token/refresh/", value, {
+      withCredentials: true,
+    })
+    .catch((error) => error.response);  
+  };
+
+
+// User Google signup
+const UserGoogleSignup = (value) => {
+    const values = {
+      username: value.email,
+      email: value.email,
+      password: value.id,
+    };
+    return userAxiosInstant.post("account/googleregistration/", values, {
+      withCredentials: true})
+      .catch((error) => {
+        throw error; 
+      });   
+  };
+
+  // User Google signin
+  const UserGoogleSignin = (value) => {
+    const values = {
+      email: value.email,
+      password: value.id,
+    };
+    return userAxiosInstant.post("account/token/", values, { withCredentials: true });
+  };
+  
+  // Create TripPlan
+  const TripPlanning = (value) => {
+    console.log('Data being sent to the backend:', value);
+    return userAxiosInstant.post("travel_manager/main-place/",value, {
+    withCredentials: true,
+  });
+  };
+
+
+  const TripPlanningData = (value) => {
+    console.log('Data being sent to the backend:', value);
+    return userAxiosInstant.post("travel_manager/trip-planning/",value, {
+    withCredentials: true,
+  });
+  };
+  
+  
+//------------------------------ GET METHODS----------------------------------------------
+>>>>>>> origin/main
 
 export {
   userSignin,
   UserGoogleSignup,
   UserGoogleSignin,
   TokenRefresh,
+<<<<<<< HEAD
   TripPlanning,
   TripPlanningData,
   InviteFriends,
@@ -115,4 +171,8 @@ export {
   EditTripPlanning,
   EditPlanningData,
   GuidingTripList,
+=======
+  TripPlanning,     
+  TripPlanningData,
+>>>>>>> origin/main
 };

@@ -2,8 +2,13 @@ import React, { useState, useEffect } from 'react'
 import myImage from '../../../assets/image/home.jpg'
 import MapImage from '../../../assets/image/homeMapStatic.jpg'
 import { SimpleCard } from './raitingCard';
+<<<<<<< HEAD
 import  Footer from '../../../components/footer/footer';
 import { UserComplexNavbar } from '../Navbar/navbar';
+=======
+import { FooterWithSocialLinks } from '../../../components/footer.jsx/footer';
+import { ComplexNavbar } from '../../../components/Navbar/navbar';
+>>>>>>> origin/main
 import { useNavigate } from 'react-router-dom';
 
 
@@ -23,13 +28,21 @@ function Home() {
 
 
   const handleNavigate =() =>{
+<<<<<<< HEAD
     navigate('/user/location_plan/')
+=======
+    navigate('location_plan/')
+>>>>>>> origin/main
   }
 
   return (
  
     <div>
+<<<<<<< HEAD
        <UserComplexNavbar/>
+=======
+       <ComplexNavbar/>
+>>>>>>> origin/main
        <div className="flex flex-col lg:flex-row">
         <div className=" p-2 border-1 sm:w-1/2 md:w-2/5 lg:w-2/5 xl:w-2/5 ">
 
@@ -89,7 +102,11 @@ function Home() {
  
         </div>
       </div>
+<<<<<<< HEAD
        <Footer/>
+=======
+       <FooterWithSocialLinks/>
+>>>>>>> origin/main
 
       <div>
 
