@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
 import AdminSideNav from "./SideNavbar/sideNav";
 import AdminNavbar from "./Navbar/navBar";
@@ -62,14 +61,4 @@ function dashboard() {
 }
 
 export default dashboard;
-=======
- import React from 'react'
  
- function dashboard() {
-   return (
-     <div>dashboard</div>
-   )
- }
- 
- export default dashboard
->>>>>>> origin/main

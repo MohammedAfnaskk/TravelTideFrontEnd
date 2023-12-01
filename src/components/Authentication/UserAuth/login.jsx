@@ -94,19 +94,14 @@ const Login=({}) => {
           console.log(res.status);
           toast.error("Invalid login credentials or verify your email");
         }
-      } catch (error) {
-<<<<<<< HEAD
-        console.log(error.response);
-=======
->>>>>>> origin/main
-        console.error("An error occurred during login:", error);
+      } catch (error) { 
+         console.error("An error occurred during login:", error);
         toast.error("An error occurred during login. Please try again later.");
       }
     }
   };
 
-<<<<<<< HEAD
-
+ 
 
 
 
@@ -122,18 +117,7 @@ const Login=({}) => {
 
   useEffect(()=>{ 
 
-=======
-  // For google registration
-  const [guser, setgUser] = useState([]);
-
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      setgUser(codeResponse);
-      GoogleAuth();
-    },
-    onError: (error) => console.log("Login Failed:", error),
-  });
->>>>>>> origin/main
+ 
   const GoogleAuth = async () => {
    
     try {
@@ -167,16 +151,14 @@ const Login=({}) => {
     }  
   };
 
-<<<<<<< HEAD
-  if (guser){
+   if (guser){
     GoogleAuth();
   }
 
   }, [guser])
 
 
-=======
->>>>>>> origin/main
+ 
 return (
     <>
 

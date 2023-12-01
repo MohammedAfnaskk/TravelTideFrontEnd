@@ -6,11 +6,8 @@ const GuideGoogleSignup = (value) => {
     username: value.email,
     password: value.id,
   };
-<<<<<<< HEAD
-  return GuideAxiosInstant.post("guide/googleregistration/", values, {
-=======
-  return GuideAxiosInstant.post("account/googleregistration/", values, {
->>>>>>> origin/main
+   return GuideAxiosInstant.post("guide/googleregistration/", values, {
+ 
     withCredentials: true,
   });
 };

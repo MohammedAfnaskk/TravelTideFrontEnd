@@ -29,7 +29,7 @@ const EditTripPlanningTable = () => {
 
   useEffect(() => {
      userAxiosInstant
-      .get(`/travel_manager/MainPlaceViewSetsingleView/${id}/`)
+      .get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
       .then((response) => {
         console.log("Response Data:--->>", response.data);
         setCurrentTripDetails(response.data);

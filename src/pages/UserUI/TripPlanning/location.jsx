@@ -3,11 +3,7 @@
   import DatePicker from "react-datepicker";
   import "react-datepicker/dist/react-datepicker.css";
   import { Input, Button } from "@material-tailwind/react";
-<<<<<<< HEAD
   import { UserComplexNavbar } from "../Navbar/navbar";
-=======
-  import { ComplexNavbar } from "../../../components/Navbar/navbar";
->>>>>>> origin/main
   import axios from 'axios'; // Import Axios
   import { clearMainPlace, setMainPlace} from '../../../redux/userSlice';
   import { useDispatch } from 'react-redux';
@@ -106,11 +102,8 @@
 
   return (
     <>
-<<<<<<< HEAD
-    <UserComplexNavbar/>
-=======
-    <ComplexNavbar/>
->>>>>>> origin/main
+     <UserComplexNavbar/>
+ 
     <header className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-5xl mt-20 font-bold ">
   Plan a new trip
 

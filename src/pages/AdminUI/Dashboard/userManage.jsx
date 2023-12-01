@@ -82,8 +82,7 @@ export default function UserManage() {
 
   return (
     <>
-      {loading && <Loading />}
-
+ 
       <div className="flex items-start h-12 text-black text-4xl font-bold mt-4">
         User Details
       </div>

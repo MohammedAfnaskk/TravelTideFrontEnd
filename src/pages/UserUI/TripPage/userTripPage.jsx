@@ -22,7 +22,7 @@ export const TripDetailsPage = () => {
 
   useEffect(() => {
     userAxiosInstant
-      .get(`/travel_manager/MainPlaceViewSetsingleView/${id}/`)
+      .get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
       .then((response) => {
         console.log("Response Data:", response.data); // Log the data received
         setTripDetails(response.data);

@@ -18,10 +18,8 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { UserGoogleSignup } from "../../../services/userApi";
 import axios from "axios";
 import { GuideGoogleSignup } from "../../../services/guideApi";
-<<<<<<< HEAD
 import jwtDecode from "jwt-decode";
-=======
->>>>>>> origin/main
+ 
 
 export function SignUpWithForm({open,handleOpen,selectedOption}) {
  
@@ -35,11 +33,7 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
     password: "",
     role: "",
   });
-
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
+ 
   //  For loading
   const [loading, setLoading] = useState(false);
   const handleLoading = () => setLoading((cur) => !cur);
@@ -47,11 +41,7 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
   // For google registratin
   const [guser, setgUser] = useState([]);
   console.log(user);
- 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
+  
   // Validations
   const isValidEmail = (email) => {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -132,20 +122,14 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
       setgUser(codeResponse);
-<<<<<<< HEAD
-       handleOpen();
-=======
-      GoogleAuth();
-      handleOpen();
->>>>>>> origin/main
+        handleOpen();
+ 
     },
     onError: (error) => console.log("Login Failed:", error),
   });
   
-<<<<<<< HEAD
-  useEffect(()=>{
-=======
->>>>>>> origin/main
+   useEffect(()=>{
+ 
   const GoogleAuth = async () => {
     try {
       if (!guser) return;
@@ -159,16 +143,12 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
           },
         }
       );
-<<<<<<< HEAD
-  
-=======
->>>>>>> origin/main
+ 
       let res;
       if (user.role === "user") {
         res = await UserGoogleSignup(response.data);
       } else {
-<<<<<<< HEAD
-        if(user.role ==="guide"){
+         if(user.role ==="guide"){
            res = await GuideGoogleSignup (response.data);
         }
       }
@@ -184,21 +164,13 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
         localStorage.setItem('token', token);
         navigate('/guide/');
       }
-=======
-        res = await GuideGoogleSignup(response.data);
-      }
-      toast.success(res.data.msg);
-      setgUser([]);
-      const token = JSON.stringify(res.data.token);
-      localStorage.setItem('token', token);
->>>>>>> origin/main
+ 
     } catch (error) {
       console.log(error.response);
       if (error.response && error.response.data && error.response.data.email) {
         toast.error(error.response.data.email[0]);
       } else {
-<<<<<<< HEAD
-        // toast.error("An error occurred during registration.");
+         // toast.error("An error occurred during registration.");
       }
     }
   };
@@ -211,16 +183,7 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
 
   useEffect(() => {
      document.title = "SignUp | Travel Tide";
-=======
-        toast.error("An error occurred during registration.");
-      }
-    }
-  };
-  
-  useEffect(() => {
-    // FirstInputRef.current.focus();
-    document.title = "SignUp | Travel Tide";
->>>>>>> origin/main
+ 
     setUser({...user, role : selectedOption})
   }, [handleOpen]);
 

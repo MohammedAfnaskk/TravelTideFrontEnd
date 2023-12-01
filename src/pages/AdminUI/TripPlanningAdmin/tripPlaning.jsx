@@ -154,7 +154,7 @@ const AdminTripGuide = () => {
         },
       });
       console.log("response", response);
-      var id = 0;
+      let id = 0;
       if (response.status === 201) {
         const formDataArray = entries.map((entry) => {
           const entryFormData = new FormData();

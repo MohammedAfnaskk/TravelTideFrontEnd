@@ -21,7 +21,7 @@ export const TripDetailsPage = () => {
   const [error, setError] = useState(null);
   const fetchData = async () => {
     try {
-      const response = await userAxiosInstant.get(`/travel_manager/MainPlaceViewSetsingleView/${id}/`);
+      const response = await userAxiosInstant.get(`/travel_manager/MainPlaceViewSetsingleView/${id}`);
       console.log("Response Data:", response.data);
       setTripDetails(response.data);
     } catch (error) {

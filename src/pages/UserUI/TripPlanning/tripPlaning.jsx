@@ -1,48 +1,35 @@
-import React, { useState, useRef, useEffect } from 'react'
-<<<<<<< HEAD
+import React, { useState, useRef, useEffect } from "react";
 import { ComplexNavbar } from "../NavbarSemi/Nav";
-=======
-import { ComplexNavbar } from "../../NavbarSemi/Nav";
->>>>>>> origin/main
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Textarea, Input } from "@material-tailwind/react";
-import PlaceCard from '../../UserUI/TripPlanning/PlaceCard';
-import placeImage from '../../../assets/image/adminbg.jpg';
-<<<<<<< HEAD
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-=======
->>>>>>> origin/main
-import jwt_decode from 'jwt-decode'
-import { useDispatch, useSelector } from 'react-redux';
-import { TripPlanning, TripPlanningData } from '../../../services/userApi';
-import { useNavigate } from 'react-router-dom';
+import PlaceCard from "../../UserUI/TripPlanning/PlaceCard";
+import placeImage from "../../../assets/image/adminbg.jpg";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-<<<<<<< HEAD
-=======
+import jwt_decode from "jwt-decode";
+import { useDispatch, useSelector } from "react-redux";
+import { TripPlanning, TripPlanningData } from "../../../services/userApi";
+import { useNavigate } from "react-router-dom";
 
->>>>>>> origin/main
 const TripPlanningTable = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const token = localStorage.getItem('token')
-  const decode = jwt_decode(token)
-
+  const token = localStorage.getItem("token");
+  const decode = jwt_decode(token);
 
   const fileInputRef = useRef(null);
 
   const handleFileChange = (event) => {
     const selectedImage = event.target.files[0];
-<<<<<<< HEAD
-    
-  if (!selectedImage) {
-    toast.error('Please select a valid image for the Main Place');
-    return;
-  }
 
-=======
->>>>>>> origin/main
+    if (!selectedImage) {
+      toast.error("Please select a valid image for the Main Place");
+      return;
+    }
+
     setnoteBudget({
       ...notebuget,
       place_image: selectedImage,
@@ -54,30 +41,30 @@ const TripPlanningTable = () => {
   };
 
   const [notebuget, setnoteBudget] = useState({
-    Note: '',
-    Budget: '',
+    Note: "",
+    Budget: "",
     place_image: null,
   });
 
-  const { Note, Budget } = notebuget
+  const { Note, Budget } = notebuget;
 
   const [entries, setEntries] = useState([
     {
-      place: '',
-      description: '',
+      place: "",
+      description: "",
       image: null, // You can store the selected image here
-      date: '',
+      date: "",
     },
   ]);
 
-  console.log('tripPlannig', entries)
+  console.log("tripPlannig", entries);
 
   const handleAddEntry = () => {
     const newEntry = {
-      place: '',
-      description: '',
+      place: "",
+      description: "",
       image: null,
-      date: '',
+      date: "",
     };
     setEntries([...entries, newEntry]);
   };
@@ -95,46 +82,37 @@ const TripPlanningTable = () => {
   };
 
   const handleImageChange = (event, index) => {
-<<<<<<< HEAD
     const selectedImage = event.target.files[0];
 
     if (!selectedImage) {
-      toast.error('Please select a valid image');
+      toast.error("Please select a valid image");
       return;
     }
-=======
->>>>>>> origin/main
+
     const updatedEntries = [...entries];
     updatedEntries[index].image = event.target.files[0]; // Assuming you want to store the first selected image
     setEntries(updatedEntries);
   };
 
-
   const mainPlace = useSelector((state) => state.user.MainPlace);
-  const main_place = mainPlace.main_place
+  const main_place = mainPlace.main_place;
   const start_date = mainPlace.start_date
-    ? new Date(mainPlace.start_date).toISOString().split('T')[0]
-    : '';
+    ? new Date(mainPlace.start_date).toISOString().split("T")[0]
+    : "";
 
   const end_date = mainPlace.end_date
-    ? new Date(mainPlace.end_date).toISOString().split('T')[0]
-    : '';
+    ? new Date(mainPlace.end_date).toISOString().split("T")[0]
+    : "";
 
-  const note = notebuget.Note
-  const budget = notebuget.Budget
-  const imageUrl = notebuget.place_image ? URL.createObjectURL(notebuget.place_image) : placeImage;
+  const note = notebuget.Note;
+  const budget = notebuget.Budget;
+  const imageUrl = notebuget.place_image
+    ? URL.createObjectURL(notebuget.place_image)
+    : placeImage;
 
   const handleSaveEntries = async () => {
-<<<<<<< HEAD
-    const formData = new FormData();
-     
-=======
-    const location = useLocation();
-      const id = location.state && location.state.id;
-      console.log(id);
     const formData = new FormData();
 
->>>>>>> origin/main
     formData.append("user", decode.user_id);
     formData.append("main_place", main_place);
     formData.append("start_date", start_date);
@@ -142,47 +120,40 @@ const TripPlanningTable = () => {
     formData.append("note", note);
     formData.append("budget", budget);
 
-<<<<<<< HEAD
-     if (notebuget.place_image) {
+    if (notebuget.place_image) {
       formData.append("place_image", notebuget.place_image);
     }
     //-------------------------validation----------------------//
     if (notebuget.place_image === null) {
-      toast.error('Main Place image is required');
+      toast.error("Main Place image is required");
       return;
     }
 
-    if (Note.trim() === '') {
-      toast.error('Note field is required');
+    if (Note.trim() === "") {
+      toast.error("Note field is required");
       return;
     }
-  
 
-  
     const invalidEntries = entries.some((entry) => {
       return (
-        entry.place.trim() === '' ||
-        entry.description.trim() === '' ||
+        entry.place.trim() === "" ||
+        entry.description.trim() === "" ||
         entry.image === null ||
-        entry.date.trim() === ''
+        entry.date.trim() === ""
       );
     });
-  
+
     if (invalidEntries) {
-      toast.error('Please fill in all entry fields (Place, Description, Image, Date)');
+      toast.error(
+        "Please fill in all entry fields (Place, Description, Image, Date)"
+      );
       return;
     }
 
-    if (Budget.trim() === '') {
-      toast.error('Budget field is required');
+    if (Budget.trim() === "") {
+      toast.error("Budget field is required");
       return;
     }
-=======
-    // Check if 'notebudget.place_image' exists and add it to formData
-    if (notebuget.place_image) {
-      formData.append("place_image", notebuget.place_image);
-    }
->>>>>>> origin/main
 
     try {
       const response = await TripPlanning(formData, {
@@ -191,26 +162,20 @@ const TripPlanningTable = () => {
         },
       });
       console.log("response", response);
-<<<<<<< HEAD
-      let id =0
-=======
-      
->>>>>>> origin/main
+      let id = 0;
+
       if (response.status === 201) {
         const formDataArray = entries.map((entry) => {
           const entryFormData = new FormData();
-          entryFormData.append('place', entry.place);
-          entryFormData.append('description', entry.description);
-          entryFormData.append('date', entry.date);
-          entryFormData.append('maintable_id', response.data.id);
-<<<<<<< HEAD
-          id = response.data.id
-=======
->>>>>>> origin/main
+          entryFormData.append("place", entry.place);
+          entryFormData.append("description", entry.description);
+          entryFormData.append("date", entry.date);
+          entryFormData.append("maintable_id", response.data.id);
+          id = response.data.id;
 
           // Check if 'entry.image' exists and add it to entryFormData
           if (entry.image) {
-            entryFormData.append('image', entry.image);
+            entryFormData.append("image", entry.image);
           }
 
           return entryFormData;
@@ -218,37 +183,21 @@ const TripPlanningTable = () => {
         for (const entryFormData of formDataArray) {
           const response = await TripPlanningData(entryFormData, {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              "Content-Type": "multipart/form-data",
             },
           });
-          console.log('Response:', response);
-<<<<<<< HEAD
-          
+          console.log("Response:", response);
         }
       }
-      navigate('/user/trip-page/',{ state: {id} });
+      navigate("/user/trip-page/", { state: { id } });
     } catch (error) {
       console.log("response trip data", error);
-      toast.error('Error while saving entries');
-
-=======
-        }
-      }
-      navigate('/user/trip-page/');
-    } catch (error) {
-      console.log("response trip data", error);
->>>>>>> origin/main
+      toast.error("Error while saving entries");
     }
-
-
-  }
-
-
-
+  };
 
   return (
     <div>
-
       <ComplexNavbar />
 
       {/* Add more content */}
@@ -256,7 +205,6 @@ const TripPlanningTable = () => {
         {/* main_place image  */}
 
         <div className="relative">
-
           <form encType="multipart/form-data">
             <input
               type="file"
@@ -265,10 +213,8 @@ const TripPlanningTable = () => {
               onChange={handleFileChange}
               ref={fileInputRef}
               className="hidden"
-
             />
           </form>
-
 
           {/* Image */}
           <img
@@ -289,7 +235,9 @@ const TripPlanningTable = () => {
             size="md"
             label="Note"
             value={Note}
-            onChange={(e) => setnoteBudget({ ...notebuget, Note: e.target.value })}
+            onChange={(e) =>
+              setnoteBudget({ ...notebuget, Note: e.target.value })
+            }
           />
         </div>
 
@@ -297,10 +245,13 @@ const TripPlanningTable = () => {
 
         {entries.map((entry, index) => (
           <div key={index} className="mt-10">
-
             <div className="mb-8   inline-flex  ml-10">
-              <button onClick={() => handleDeleteEntry(index)} className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded">
-                <FontAwesomeIcon icon={faTrash} /> {/* Use the delete icon here */}
+              <button
+                onClick={() => handleDeleteEntry(index)}
+                className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded"
+              >
+                <FontAwesomeIcon icon={faTrash} />{" "}
+                {/* Use the delete icon here */}
               </button>
             </div>
             <div className="  px-10">
@@ -309,7 +260,7 @@ const TripPlanningTable = () => {
                 size="lg"
                 label="Place"
                 value={entry.place}
-                onChange={(e) => handleInputChange(e, index, 'place')}
+                onChange={(e) => handleInputChange(e, index, "place")}
               />
             </div>
 
@@ -319,12 +270,15 @@ const TripPlanningTable = () => {
                 size="md"
                 label="Description"
                 value={entry.description}
-                onChange={(e) => handleInputChange(e, index, 'description')}
+                onChange={(e) => handleInputChange(e, index, "description")}
               />
             </div>
 
             <div className="w-96 px-10 mt-4">
-              <label htmlFor={`imageInput-${index}`} className="block text-gray-700 text-sm font-bold">
+              <label
+                htmlFor={`imageInput-${index}`}
+                className="block text-gray-700 text-sm font-bold"
+              >
                 Select an Image:
               </label>
               <input
@@ -341,23 +295,23 @@ const TripPlanningTable = () => {
                 type="date"
                 label="Date"
                 value={entry.date}
-                onChange={(e) => handleInputChange(e, index, 'date')}
+                onChange={(e) => handleInputChange(e, index, "date")}
               />
             </div>
 
             {/* Add another form */}
             <div className="mt-10   px-10">
-              <button onClick={handleAddEntry} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+              <button
+                onClick={handleAddEntry}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              >
                 + Add Another Entry
               </button>
             </div>
 
             <hr className="w-18 border-t border-gray-500 mt-10" />
-
           </div>
-
         ))}
-
 
         {/* Budget input field */}
         <div className="mt-4   px-10">
@@ -366,26 +320,24 @@ const TripPlanningTable = () => {
             type="text"
             placeholder="Enter budget"
             value={Budget}
-            onChange={(e) => setnoteBudget({ ...notebuget, Budget: e.target.value })}
+            onChange={(e) =>
+              setnoteBudget({ ...notebuget, Budget: e.target.value })
+            }
             className="w-full px-3 py-2 border rounded-lg"
           />
         </div>
 
         <div className="mt-12 w-auto px-10 mb-12">
-          <button onClick={handleSaveEntries} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+          <button
+            onClick={handleSaveEntries}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+          >
             Save All
           </button>
         </div>
-
       </div>
     </div>
-
   );
 };
 
-export default TripPlanningTable
-
-
-
-
-
+export default TripPlanningTable;

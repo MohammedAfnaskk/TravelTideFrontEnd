@@ -2,13 +2,9 @@ import React, {useEffect, useState, useRef} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import backgroundImage from '../../../assets/image/adminbg.jpg';
 import jwtDecode from 'jwt-decode';
-<<<<<<< HEAD
 import adminApi from "../../../services/adminApi";
 import { ToastContainer,toast } from 'react-toastify';
-=======
-import { AdminSignin } from "../../../services/adminApi";
- import { ToastContainer,toast } from 'react-toastify';
->>>>>>> origin/main
+ 
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -54,8 +50,7 @@ export default function AdminLogin() {
   // After form submition
   const FormHandlerLogin = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-  
+   
     if (Validation()) {
       try {
         const res = await adminApi.AdminSignin(user);
@@ -85,30 +80,7 @@ export default function AdminLogin() {
    <>
          <ToastContainer />
 
-=======
-    if (Validation()) {
-      AdminSignin(user).then((res) => {
-        if (res.status === 200) {
-          const token = JSON.stringify(res.data)
-          const decoded = jwtDecode(token)
-          if (decoded.role === 'admin' && decoded.is_admin) {
-            localStorage.setItem("token", token)
-            toast.success('Login succesfull')
-            navigate('/admin')
-          }  
-          else {
-            toast.error('Invalid role')
-          }
-        } else {
-          toast.error('Invalid login credentials')
-        }
-      })
-    }
-}
-
-  return (
-   <>
->>>>>>> origin/main
+ 
       <div
           className="bg-cover bg-center h-screen"
           style={{
@@ -119,14 +91,9 @@ export default function AdminLogin() {
     <div className=" bg-gray-100 rounded-2xl  sm:border border-dark-800 mx-auto mt-16 ">
     <Card color="transparent">
       <Typography variant="h4" color="blue-gray" className="text-center mt-6">
-<<<<<<< HEAD
-        Admin SignIn
+         Admin SignIn
       </Typography>
-=======
-        SignIn
-      </Typography>
-      <ToastContainer />
->>>>>>> origin/main
+ 
 
       <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 " onSubmit={FormHandlerLogin}>
         <div className="mb-4 flex flex-col mx-5 gap-6">
