@@ -1,6 +1,6 @@
 import React from "react";
 
-export function Loading() {
+export default function Loading() {
   return (
     // <div className="flex gap-4 flex-wrap justify-center">
     //     {/* <img className="w-20 h-20 animate-spin" src="https://www.svgrepo.com/show/173880/loading-arrows.svg" alt="Loading icon" />

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from "query-string";
 import { Payment } from '../../services/userApi';
+
 // import './HomePage.css';
 
 const HomePages = () => {

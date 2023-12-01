@@ -16,7 +16,7 @@ const ProfileGuideDetails = () => {
     const guideId = decode.user_id;
  
     GuideAxiosInstant
-    .get(`/account/guide_details/${guideId}`)
+    .get(`/account/guide_details/${guideId}/`)
        .then((response) => {
         setGuide(response.data);
       })

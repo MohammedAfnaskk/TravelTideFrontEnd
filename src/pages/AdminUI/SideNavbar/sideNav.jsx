@@ -25,56 +25,91 @@ import {
   ChevronDownIcon,
   CubeTransparentIcon,
 } from "@heroicons/react/24/outline";
-import image from '../../../assets/image/user.png'
+import image from "../../../assets/image/user.png";
+import { useNavigate } from "react-router-dom";
  
-export function AdminSideNav() {
+export default function AdminSideNav(props) {
+  const { setDisplayedComponent } = props;
+  const navigate = useNavigate();
+
   const [open, setOpen] = React.useState(0);
   const [openAlert, setOpenAlert] = React.useState(true);
- 
+
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
- 
+
+  const LogoutButton = () => {
+      localStorage.removeItem("token");
+      navigate('/admin/login')
+     };
+
+  
+
   return (
-    <Card className="h-screen w-full max-w-[20rem] p-4 shadow-xl bg-blue-gray-50 shadow-blue-gray-900/5">
-      <div className="mb-2 flex items-center gap-4 p-4">
-        <img src={image} alt="brand" className="h-8 w-8" />
-        <Typography variant="h5" color="blue-gray">
-          Admin
-        </Typography>
-      </div>
+    <Card className=" w-full max-w-[20rem] p-4 shadow-xl bg-white shadow-blue-gray-900/5 rounded-none">
       <List>
-    
         <hr className="my-2 border-blue-gray-50" />
         <ListItem>
           <ListItemPrefix>
             <InboxIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Dashboard
+          <button onClick={() => setDisplayedComponent("myDashboard")}>
+            Dashboard
+          </button>
+
           <ListItemSuffix>
-            <Chip value="14" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
+            <Chip
+              value="14"
+              size="sm"
+              variant="ghost"
+              color="blue-gray"
+              className="rounded-full"
+            />
           </ListItemSuffix>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
             <UserCircleIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Guide List
+          <button onClick={() => setDisplayedComponent("manageGuide")}>
+            Guide List
+          </button>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
-            <Cog6ToothIcon className="h-5 w-5" />
+            <UserCircleIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Guide
+          <button onClick={() => setDisplayedComponent("manageUser")}>
+            User List
+          </button>
         </ListItem>
+
+        <ListItem>
+          <ListItemPrefix>
+            <UserCircleIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          <button onClick={() => setDisplayedComponent("adminTripPlan")}>
+            Trip Plan
+          </button>
+        </ListItem>
+
+        <ListItem>
+          <ListItemPrefix>
+            <UserCircleIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          <button onClick={() => setDisplayedComponent("tripDemoList")}>
+            Trip Guide List
+          </button>
+        </ListItem>
+
         <ListItem>
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Log Out
+          <button onClick={LogoutButton}>Log Out</button>
         </ListItem>
       </List>
-      
     </Card>
   );
 }

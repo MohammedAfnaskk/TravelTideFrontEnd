@@ -44,21 +44,7 @@ function ProfileMenu() {
       icon: UserCircleIcon,
       path: "/user/user-profile/",
     },
-    {
-      label: "Edit Profile",
-      icon: Cog6ToothIcon,
-      path: "/edit-profile", // Define the path for Edit Profile
-    },
-    {
-      label: "Inbox",
-      icon: InboxArrowDownIcon,
-      path: "/inbox", // Define the path for Inbox
-    },
-    {
-      label: "Help",
-      icon: LifebuoyIcon,
-      path: "/help", // Define the path for Help
-    },
+    
     {
       label: "Sign Out",
       icon: PowerIcon,
@@ -138,6 +124,7 @@ const navListItems = [
   },
   {
     label: "Travel guides",
+    path: "/user/trip-guiding",
   },
   {
     label: "Join a trip",

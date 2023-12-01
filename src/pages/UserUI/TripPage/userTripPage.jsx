@@ -11,16 +11,18 @@ import { userAxiosInstant } from "../../../utils/axiosUtils";
 import { useLocation } from "react-router-dom";
 import { ComplexNavbar } from "../NavbarSemi/Nav";
 import FooterWithSocialLinks from "../../../components/footer/footer";
+import { useNavigate } from 'react-router-dom';
 
 export const TripDetailsPage = () => {
   const location = useLocation();
   const id = location.state && location.state.id;
   const [tripDetails, setTripDetails] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     userAxiosInstant
-      .get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
+      .get(`/travel_manager/MainPlaceViewSetsingleView/${id}/`)
       .then((response) => {
         console.log("Response Data:", response.data); // Log the data received
         setTripDetails(response.data);
@@ -31,7 +33,10 @@ export const TripDetailsPage = () => {
       });
   }, [id]);
 
- 
+  const handleNavigate=()=>{
+       
+      navigate('/user/edit-trip',{ state: { id }})
+  }
 
 
 
@@ -112,7 +117,9 @@ export const TripDetailsPage = () => {
           </div>
         )}
         <div className="mt-12 w-auto px-10 mb-12">
-          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+          onClick={handleNavigate}
+          >
             Edit TripPlan
           </button>
         </div>

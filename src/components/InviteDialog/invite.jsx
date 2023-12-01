@@ -12,7 +12,7 @@ import { InviteFriends } from "../../services/userApi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
-import { Loading } from "../LoadingAnimation/Loading";
+// import  Loading  from "../LoadingAnimation/Loading";
 
 export function InviteFriend() {
   const location = useLocation();
@@ -36,7 +36,7 @@ export function InviteFriend() {
   const SendInvitationFriends = async () => {
  
     try {
-      setLoading(true);
+      // setLoading(true);
       const response = await InviteFriends({ email, trip_id});
       
 
@@ -50,9 +50,9 @@ export function InviteFriend() {
       console.log("Error:", error);
       toast.error("Error sending invitation");
     }
-    finally {
-      setLoading(false);
-    }
+    // finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -69,8 +69,7 @@ export function InviteFriend() {
         handler={() => handleOpen(null)}
       >
 
-        <ToastContainer />
-
+ 
         <DialogHeader>Invite Trip Mates</DialogHeader>
         <DialogBody divider>
           <div className="relative">

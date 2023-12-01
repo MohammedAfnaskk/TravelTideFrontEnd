@@ -1,4 +1,4 @@
-import React ,{useState} from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   MobileNav,
@@ -9,65 +9,42 @@ import {
   MenuList,
   MenuItem,
   Avatar,
-  Card,
   IconButton,
   Input,
 } from "@material-tailwind/react";
 import {
-  CubeTransparentIcon,
   UserCircleIcon,
-  CodeBracketSquareIcon,
-  Square3Stack3DIcon,
   ChevronDownIcon,
   Cog6ToothIcon,
   InboxArrowDownIcon,
   LifebuoyIcon,
   PowerIcon,
-  RocketLaunchIcon,
   Bars2Icon,
 } from "@heroicons/react/24/outline";
-import  Login from "../../../components/Authentication/UserAuth/login";
-// import { SignUpWithForm } from "../Authentication/UserAuth/signup";
+import Login from "../../../components/Authentication/UserAuth/login";
 import { useNavigate } from "react-router-dom";
-  
-
- 
- 
+import { Link } from "react-router-dom";
 
 function ProfileMenu() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  const handleLogout = () => { 
+  const handleLogout = () => {
     localStorage.removeItem("token");
     isAuthenticated();
-    navigate('/guide')
+    navigate('/user')
     window.location.reload();
-   };
+  };
 
   const profileMenuItems = [
     {
       label: "My Profile",
       icon: UserCircleIcon,
-      path: '/guide/guide-profile/',
+      path: "/guide/guide-profile/",
     },
-    {
-      label: "Edit Profile",
-      icon: Cog6ToothIcon,
-      path: '/edit-profile', // Define the path for Edit Profile
-    },
-    {
-      label: "Inbox",
-      icon: InboxArrowDownIcon,
-      path: '/inbox', // Define the path for Inbox
-    },
-    {
-      label: "Help",
-      icon: LifebuoyIcon,
-      path: '/help', // Define the path for Help
-    },
+ 
     {
       label: "Sign Out",
       icon: PowerIcon,
@@ -139,55 +116,48 @@ function ProfileMenu() {
   );
 }
 
-
-
- 
- 
 // nav list component
 const navListItems = [
   {
     label: "Home",
     path: "/guide/",
-
-   },
+  },
   {
     label: "Travel guides",
-   },
+    path: "/guide/trip-guiding",
+  },
+  
   {
-    label: "Plan a trip",
-   },
-   {
-    
-  search: <div className="ml-24">
-  <Input
-    type="search"
-    label="Type here..."
-     containerProps={{
-      className: "min-w-auto",
-    }}
-  />
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6 text-gray-400 absolute right-2 top-2" // Position the icon using absolute positioning
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    onClick={() => {
-      // Handle the search icon click event here
-    }}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M21 21l-6-6M9 2a7 7 0 110 14 7 7 0 010-14z"
-    />
-  </svg>
-  </div> 
+    search: (
+      <div className="ml-24">
+        <Input
+          type="search"
+          label="Type here..."
+          containerProps={{
+            className: "min-w-auto",
+          }}
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6 text-gray-400 absolute right-2 top-2" // Position the icon using absolute positioning
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          onClick={() => {
+            // Handle the search icon click event here
+          }}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21l-6-6M9 2a7 7 0 110 14 7 7 0 010-14z"
+          />
+        </svg>
+      </div>
+    ),
   },
 ];
- 
-
 
 function NavList() {
   return (
@@ -201,16 +171,11 @@ function NavList() {
             color="blue-gray"
             className="font-bold"
           >
-
             <MenuItem className="flex gap-2 lg:rounded-full">
-              {item.label}
+              <Link to={item.path}> {item.label} </Link>
             </MenuItem>
           </Typography>
-          {item.search && (
-            <div className="relative">
-              {item.search}
-            </div>
-          )}
+          {item.search && <div className="relative">{item.search}</div>}
         </div>
       ))}
     </div>
@@ -220,42 +185,35 @@ function NavList() {
 export default NavList;
 
 const isAuthenticated = () => {
-  const token = localStorage.getItem('token');
-  if (token){
-    return true
+  const token = localStorage.getItem("token");
+  if (token) {
+    return true;
+  } else {
+    return false;
   }
-  else{
-    return false
-
-  }
-   
 };
 
- 
 export function ComplexNavbar({}) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState();
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
- 
+
   React.useEffect(() => {
     window.addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false),
+      () => window.innerWidth >= 960 && setIsNavOpen(false)
     );
-    
   }, []);
 
-
   return (
-    <Navbar className="mx-auto max-w-full  p-3 pl-6 rounded-none">
+    <Navbar className="mx-auto max-w-full  p-3 pl-6 rounded-none  ">
       <div className="relative mx-auto flex items-center text-blue-gray-900">
         <Typography
           as="a"
           href="#"
           className="text-2xl font-bold  text-[#f75940] hover:text-[#e54632] lg:text-3xl transition duration-300 ease-in-out ml-2 lg:ml-24 "
-        
         >
           Travel Tide
         </Typography>
@@ -272,17 +230,17 @@ export function ComplexNavbar({}) {
           <Bars2Icon className="h-6 w-6" />
         </IconButton>
 
-        {isAuthenticated()? (
-          <ProfileMenu/>
-
+        {isAuthenticated() ? (
+          <ProfileMenu />
         ) : (
           <div className="ml-auto mr-2 ">
-          <Login />
-          <Button
-          onClick={()=>navigate('/user_role')}
-            className="bg-[#f75940] rounded-full text-white py-2 px-4">
-            Sign up
-          </Button>
+            <Login />
+            <Button
+              onClick={() => navigate("/user_role")}
+              className="bg-[#f75940] rounded-full text-white py-2 px-4"
+            >
+              Sign up
+            </Button>
           </div>
         )}
       </div>

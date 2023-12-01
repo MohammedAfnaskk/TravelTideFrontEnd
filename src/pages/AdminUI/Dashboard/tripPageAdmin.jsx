@@ -1,49 +1,51 @@
 import React, { useState, useEffect } from "react";
 import MapComponent from "../../GoogleMap/googleMap";
-import { ComplexNavbar } from "../../GuideUI/NavbarSemi/Nav";
 import {
   Card,
   CardBody,
   CardFooter,
   Typography,
 } from "@material-tailwind/react";
-import PlaceCard from "./PlaceListCard";
-import { GuideAxiosInstant } from "../../../utils/axiosUtils";
-import { useLocation } from "react-router-dom";
+import PlaceCard from "../../UserUI/Travel Guide/TripGuidingPage/PlaceListCard";
+import { userAxiosInstant } from "../../../utils/axiosUtils";
 import Footer from "../../../components/footer/footer";
+import { useParams } from "react-router-dom";
+import Navbar from "../Navbar/navBar";
 import { useNavigate } from "react-router-dom";
 
-export const TripDetailsPage = () => {
-  const location = useLocation();
-  const id = location.state && location.state.id;
-
+export const AdminTripGuidingPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [tripDetails, setTripDetails] = useState(null);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const fetchData = async () => {
+    try {
+      const response = await userAxiosInstant.get(
+        `/travel_manager/MainPlaceViewSetsingleView/${id}/`
+      );
+      console.log("Response Data:", response.data);
+      setTripDetails(response.data);
+    } catch (error) {
+      console.error(error);
+      setError(error);
+    }
+  };
 
   useEffect(() => {
-    GuideAxiosInstant.get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
-      .then((response) => {
-        console.log("Response Data:", response.data);
-        setTripDetails(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-        setError(error);
-      });
+    fetchData();
   }, [id]);
 
   const handleNavigate = () => {
-    navigate("/guide/edit-trip", { state: { id } });
+    navigate("/admin/edit-trip", { state: { id } });
   };
+
   return (
     <>
+      <Navbar />
       <div className="relative overflow-y-auto">
         {error && <p>Error fetching trip details: {error.message}</p>}
         {tripDetails && (
           <div>
-            <ComplexNavbar />
-
             <img
               className="w-full h-96 object-cover relative z-10"
               src={tripDetails.place_image}
@@ -52,23 +54,8 @@ export const TripDetailsPage = () => {
             <div className="absolute top-56 lg:ml-32 h-44 ml-16 w-8/12 flex justify-items-center z-20">
               <PlaceCard tripDetails={tripDetails} />
             </div>
+
             <hr className="w-18 border-t border-gray-500 mt-24 mb-9 px-9" />
-
-            <div className=" rounded-lg bg-gray-300 p-4 text-black grid grid-cols-2 gap-80 mx-20">
-              <div className="col-span-1">
-                <div className="text-4xl font-semibold mt-7 ml-10">Budget</div>
-                <div className="text-3xl font-bold mt-2 ml-28">
-                  ₹{tripDetails.budget}
-                </div>
-              </div>
-
-              <div className="col-span-1">
-                <div className="text-lg font-semibold mt-7">Payment Option</div>
-                <div className="text-base">Credit Card</div>
-              </div>
-            </div>
-
-            <hr className="w-18 border-t border-gray-500 mt-10 mb-9 px-9" />
 
             <Card className="w-full">
               <CardBody>
@@ -106,16 +93,16 @@ export const TripDetailsPage = () => {
                   </div>
                 </div>
               ))}
-              <div className="mt-12 w-auto px-10 mb-12">
-                <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-                  onClick={handleNavigate}
-                >
-                  Edit TripPlan
-                </button>
-              </div>
-              <Footer />
             </div>
+            <div className="mt-12 w-auto px-10 mb-12">
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+                onClick={handleNavigate}
+              >
+                Edit TripPlan
+              </button>
+            </div>
+            <Footer />
           </div>
         )}
       </div>
@@ -123,7 +110,7 @@ export const TripDetailsPage = () => {
   );
 };
 
-const TripPage = () => {
+const AdminGuidingDetails = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {
@@ -140,7 +127,7 @@ const TripPage = () => {
     <>
       <div className="flex">
         <div className=" lg:w-7/12">
-          <TripDetailsPage />
+          <AdminTripGuidingPage />
         </div>
         <div className="fixed top-0 right-0  lg:w-5/12">
           {screenWidth >= 750 ? <MapComponent /> : null}
@@ -150,4 +137,4 @@ const TripPage = () => {
   );
 };
 
-export default TripPage;
+export default AdminGuidingDetails;

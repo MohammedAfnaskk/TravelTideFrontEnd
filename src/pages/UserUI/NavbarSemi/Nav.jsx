@@ -23,6 +23,8 @@ const navListItems = [
      },
     {
       label: "Travel Guide",
+      path: "/user/trip-guiding",
+
      },
      {
       label: "Plan a Trip",

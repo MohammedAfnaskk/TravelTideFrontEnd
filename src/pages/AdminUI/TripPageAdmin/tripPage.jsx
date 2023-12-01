@@ -11,7 +11,6 @@ import PlaceCard from "./PlaceListCard";
 import { GuideAxiosInstant } from "../../../utils/axiosUtils";
 import { useLocation } from "react-router-dom";
 import Footer from "../../../components/footer/footer";
-import { useNavigate } from "react-router-dom";
 
 export const TripDetailsPage = () => {
   const location = useLocation();
@@ -19,7 +18,6 @@ export const TripDetailsPage = () => {
 
   const [tripDetails, setTripDetails] = useState(null);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     GuideAxiosInstant.get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
@@ -33,17 +31,13 @@ export const TripDetailsPage = () => {
       });
   }, [id]);
 
-  const handleNavigate = () => {
-    navigate("/guide/edit-trip", { state: { id } });
-  };
   return (
     <>
       <div className="relative overflow-y-auto">
         {error && <p>Error fetching trip details: {error.message}</p>}
         {tripDetails && (
           <div>
-            <ComplexNavbar />
-
+ 
             <img
               className="w-full h-96 object-cover relative z-10"
               src={tripDetails.place_image}
@@ -107,10 +101,7 @@ export const TripDetailsPage = () => {
                 </div>
               ))}
               <div className="mt-12 w-auto px-10 mb-12">
-                <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-                  onClick={handleNavigate}
-                >
+                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
                   Edit TripPlan
                 </button>
               </div>
@@ -139,12 +130,8 @@ const TripPage = () => {
   return (
     <>
       <div className="flex">
-        <div className=" lg:w-7/12">
-          <TripDetailsPage />
-        </div>
-        <div className="fixed top-0 right-0  lg:w-5/12">
-          {screenWidth >= 750 ? <MapComponent /> : null}
-        </div>
+           <TripDetailsPage />
+        
       </div>
     </>
   );
