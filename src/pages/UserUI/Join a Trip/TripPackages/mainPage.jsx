@@ -1,6 +1,5 @@
 import PackagePlaceSearch from "./packageSearch"
 import { UserComplexNavbar } from "../../Navbar/navbar"
-import TripPackageList from "./tripPackage"
 import Footer from '../../../../components/footer/footer'
 
 export const TripPackagePage=()=>{
@@ -11,8 +10,7 @@ export const TripPackagePage=()=>{
         
         <PackagePlaceSearch/>
         
-        <TripPackageList/>
-          <Footer/>
+           <Footer/>
         
         
        </div>

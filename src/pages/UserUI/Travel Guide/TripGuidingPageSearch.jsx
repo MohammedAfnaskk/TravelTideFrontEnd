@@ -67,7 +67,7 @@ export default function PackagePlaceSearch() {
           </div>
         </div>
       </div>
-      <TripGuidingList props={filteredUserList} />
+      <TripGuidingList filteredUserList={filteredUserList} />
 
     </>
   );

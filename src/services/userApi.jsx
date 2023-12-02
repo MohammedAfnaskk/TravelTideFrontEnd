@@ -1,3 +1,4 @@
+import { UserUrl } from "../constants/constants";
 import { userAxiosInstant } from "../utils/axiosUtils";
 
 //------------------------------ POST METHODS-------------------------------------------
@@ -70,11 +71,19 @@ const InviteFriends = (value) => {
   });
 };
 
-const Payment = (value) => {
-  console.log("Data being sent to the backend:", value);
-  return userAxiosInstant.post("payments/", value, {
-    withCredentials: true,
-  });
+ 
+
+//------------------------------ GET METHODS----------------------------------------------
+
+// Get  GuidingTip Details
+const TripPackage = (search) => {
+  return userAxiosInstant
+    .get(`travel_manager/guide-trip-package/?page=1&search=${search}`, {
+      withCredentials: true,
+    })
+    .catch((error) => {
+      throw error;
+    });
 };
 
 // Get  GuidingTip Details
@@ -87,6 +96,7 @@ const GuidingTripList = (search) => {
       throw error;
     });
 };
+
 
 //------------------------------ PATCH METHODS----------------------------------------------
 
@@ -110,12 +120,12 @@ export {
   UserGoogleSignup,
   UserGoogleSignin,
   TokenRefresh,
-   TripPlanning,
+  TripPlanning,
   TripPlanningData,
   InviteFriends,
-  Payment,
+
   EditTripPlanning,
   EditPlanningData,
   GuidingTripList,
- 
+  TripPackage,
 };
