@@ -31,12 +31,10 @@ export const TripDetailsPage = () => {
   };
 
   useEffect(() => {
-    
-
     fetchData();
   }, [id]);
 
-
+ 
   return (
     <>
       <ComplexNavbar />
@@ -60,7 +58,7 @@ export const TripDetailsPage = () => {
             <div className="flex  mx-36 gap-6">
                 <div className="rounded-lg  w-full bg-gray-100 p-4 text-black">
                 <div className="text-lg font-semibold">Payment Option</div>
-                <div className="text-base"><HomePages/></div>
+                <div className="text-base"><HomePages props={tripDetails}/></div>
               </div>
             
               <div className="rounded-lg  bg-gray-200 p-4 text-black ">

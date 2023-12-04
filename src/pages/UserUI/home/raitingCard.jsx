@@ -44,7 +44,15 @@ import image from '../../../assets/image/user.png'
       jobTitle: "Road Trip Enthusiast",
       ratingValue: 5,
     },
-    
+    {
+      comment:
+        "I've used this app for my last three road trips, and it's been incredibly helpful. Five stars!",
+      avatarSrc:
+        image,
+      authorName: "Michael Johnson",
+      jobTitle: "Road Trip Enthusiast",
+      ratingValue: 5,
+    },
   
   ];
   

@@ -5,10 +5,16 @@ import axios from "axios"; // Add this import statement
 import jwt_decode from "jwt-decode";
 import { userAxiosInstant } from "../../utils/axiosUtils";
 
-const HomePages = () => {
+const HomePages = (props) => {
+  const tripData = props.props
+  const trip_id = tripData.id
+  const main_place = tripData.main_place
+  const budget = tripData.budget
+  const image = tripData.place_image
   const token = localStorage.getItem("token");
   const decode = jwt_decode(token);
   const user_id = decode.user_id;
+
   const updatePaymentStatus = async () => {
     try {
       const currentDate = new Date().toISOString();
@@ -32,52 +38,58 @@ const HomePages = () => {
     }
   };
 
+  useEffect(() => {
+    const handlePaymentStatus = () => {
+      const success = new URLSearchParams(window.location.search).get("success");
+      const canceled = new URLSearchParams(window.location.search).get("canceled");
+
+      if (success === "true") {
+        updatePaymentStatus();
+      } else if (canceled === "true") {
+        console.log("Payment canceled");
+      }
+    };
+
+    const timer = setTimeout(handlePaymentStatus, 3000);
+
+    return () => clearTimeout(timer);
+
+  }, []);
+
   const SubmitPayment = async () => {
     try {
+       
+  
       const response = await axios.post(
         `${UserUrl}/payments/create-checkout-session`,
-        {},
+        {trip_id,main_place,budget,image},
         {
           withCredentials: true,
         }
       );
+  
+      window.location.href = response.data.message.url
  
-      console.log("Checkout URL:", response.data.checkout_url);
-
-      window.location.href = response.data.checkout_url;
-
-	  setTimeout(() => {
- 		const success = new URLSearchParams(window.location.search).get("success");
-		if (success === "true") {
- 		  updatePaymentStatus();
-		} else {
- 		  const canceled = new URLSearchParams(window.location.search).get("canceled");
-		  if (canceled === "true") {
-			console.log("Payment canceled");
- 		  }
-		}
-	  }, 3000); 
-	  
-    } catch (error) {
-      console.error("Error sending payment:", error);
-      toast.error("Error sending Payment");
+       
+     } catch (error) {
+      // Handle errors
+      console.error("Error creating checkout session:", error);
+      toast.error("Error creating checkout session");
     }
   };
+  
 
   return (
     <section>
       <div className="product">
-        <img
-          src="https://i.imgur.com/EHyR2nP.png"
-          alt="The cover of Stubborn Attachments"
-        />
+      
         <div className="description">
-          <h3>Stubborn Attachments</h3>
-          <h5>$20.00</h5>
+          <h3>{tripData.main_place}</h3>
+          <h5>{tripData.budget}</h5>
         </div>
       </div>
 
-      <button className="button" onClick={SubmitPayment}>
+      <button  onClick={SubmitPayment}>
         Checkout
       </button>
     </section>
