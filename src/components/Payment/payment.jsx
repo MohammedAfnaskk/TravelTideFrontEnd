@@ -5,7 +5,7 @@ import axios from "axios"; // Add this import statement
 import jwt_decode from "jwt-decode";
 import { userAxiosInstant } from "../../utils/axiosUtils";
 
-const HomePages = (props) => {
+const Payment = (props) => {
   const tripData = props.props
   const trip_id = tripData.id
   const main_place = tripData.main_place
@@ -17,11 +17,13 @@ const HomePages = (props) => {
 
   const updatePaymentStatus = async () => {
     try {
-      const currentDate = new Date().toISOString();
+      const currentDate = new Date().toISOString().split('T')[0];
 
-      const res = await userAxiosInstant.patch(
-        `payments/payment/${user_id}/`,
+      const res = await userAxiosInstant.post(
+        `payments/strippayments/`,
         {
+          user :user_id,
+          trip: trip_id,
           payment: true,
           payment_date: currentDate,
         },
@@ -96,4 +98,4 @@ const HomePages = (props) => {
   );
 };
 
-export default HomePages;
+export default Payment;

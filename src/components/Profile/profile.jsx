@@ -8,6 +8,7 @@ import Footer from '../footer/footer'
 import { SideMenuBar } from './sideMenuBar';
 import { Invitation } from './tripInvitations';
 import { ManageTripmates } from './manageTripmates';
+import JoinedTrips from './JoinedTrips';
 
 
 const Profile = () => {
@@ -36,6 +37,11 @@ const Profile = () => {
             {displayedComponent === 'manageTripmates' && (
             <div className="my-trip-plans-class">
               <ManageTripmates/>
+            </div>
+          )}
+             {displayedComponent === 'joinedTrips' && (
+            <div className="my-trip-plans-class">
+              <JoinedTrips/>
             </div>
           )}
           {displayedComponent === 'invitation' && (

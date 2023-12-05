@@ -7,19 +7,21 @@ import {
   ListItemPrefix,
   ListItemSuffix,
   Chip,
- 
 } from "@material-tailwind/react";
 import {
   ShoppingBagIcon,
   UserCircleIcon,
   InboxIcon,
- } from "@heroicons/react/24/solid";
- 
+  BugAntIcon,
+  CheckIcon,
+  CheckCircleIcon,
+  TagIcon
+} from "@heroicons/react/24/solid";
+
 import jwt_decode from "jwt-decode";
 
-
 export function SideMenuBar(props) {
-  const {setDisplayedComponent}=props
+  const { setDisplayedComponent } = props;
   const [open, setOpen] = React.useState(0);
   const [openAlert, setOpenAlert] = React.useState(true);
 
@@ -30,9 +32,9 @@ export function SideMenuBar(props) {
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
- 
+
   return (
-    <Card className="  h-72 bg-gray-300 w-full max-w-[17.5rem] p-4 mt-10 border border-gray-300">
+    <Card className="  h-80 bg-gray-300 w-full max-w-[17.5rem] p-4 mt-10 border border-gray-300">
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray">
           Settings
@@ -42,30 +44,61 @@ export function SideMenuBar(props) {
         <hr className="my-2 border-blue-gray-50" />
         <ListItem>
           <ListItemPrefix>
-            <  ShoppingBagIcon className="h-5 w-5" />
+            <ShoppingBagIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <button onClick={() =>setDisplayedComponent('myTripPlans')}>Trip Plans</button>
+          <button onClick={() => setDisplayedComponent("myTripPlans")}>
+            Trip Plans
+          </button>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
             <InboxIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <button onClick={() => setDisplayedComponent('manageTripmates')}>Manage Tripmates</button>
-           <ListItemSuffix>
-            <Chip value="14" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
+          <button onClick={() => setDisplayedComponent("manageTripmates")}>
+            Manage Tripmates
+          </button>
+          <ListItemSuffix>
+            <Chip
+              value="14"
+              size="sm"
+              variant="ghost"
+              color="blue-gray"
+              className="rounded-full"
+            />
           </ListItemSuffix>
         </ListItem>
-       
-        {role !=='guide'&& (
-          <ListItem>
-            <ListItemPrefix>
-              <UserCircleIcon className="h-5 w-5" />
-            </ListItemPrefix>
-            <button onClick={() => setDisplayedComponent('invitation')}>Trip Invitation</button>
-          </ListItem>
+
+        {role !== "guide" && (
+          <>
+            <ListItem>
+              <ListItemPrefix>
+                <CheckCircleIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <button onClick={() => setDisplayedComponent("joinedTrips")}>
+                Joined Trips
+              </button>
+              <ListItemSuffix>
+                <Chip
+                  value="1"
+                  size="sm"
+                  variant="ghost"
+                  color="blue-gray"
+                  className="rounded-full"
+                />
+              </ListItemSuffix>
+            </ListItem>
+
+            <ListItem>
+              <ListItemPrefix>
+                <UserCircleIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <button onClick={() => setDisplayedComponent("invitation")}>
+                Trip Invitation
+              </button>
+            </ListItem>
+          </>
         )}
       </List>
-      
     </Card>
   );
 }

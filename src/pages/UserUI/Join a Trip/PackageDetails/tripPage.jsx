@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from "react";
 import MapComponent from "../../../GoogleMap/googleMap";
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
   Typography,
 } from "@material-tailwind/react";
+import { toast } from "react-toastify";
+
 import PlaceCard from "./PlaceListCard";
 import { userAxiosInstant } from "../../../../utils/axiosUtils";
 import { ComplexNavbar } from "../../NavbarSemi/Nav";
 import Footer from "../../../../components/footer/footer";
 import { useParams } from "react-router-dom";
 import ChatBox from "../../ChatBox/chatBox";
-import HomePages from "../../../../components/Payment/payment";
+import Payment from "../../../../components/Payment/payment";
+import jwt_decode from "jwt-decode";
 
 export const TripDetailsPage = () => {
   const { id } = useParams();
-
   const [tripDetails, setTripDetails] = useState(null);
   const [error, setError] = useState(null);
+  const [paymentDetails, setPaymentDetails] = useState(null);
   const fetchData = async () => {
     try {
-      const response = await userAxiosInstant.get(`/travel_manager/MainPlaceViewSetsingleView/${id}`);
+      const response = await userAxiosInstant.get(
+        `/travel_manager/MainPlaceViewSetsingleView/${id}`
+      );
       console.log("Response Data:", response.data);
       setTripDetails(response.data);
     } catch (error) {
@@ -34,7 +40,48 @@ export const TripDetailsPage = () => {
     fetchData();
   }, [id]);
 
- 
+  useEffect(() => {
+    const fetchPaymentDetails = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const decode = jwt_decode(token);
+        const user_id = decode.user_id;
+
+        if (tripDetails) {
+          const res = await userAxiosInstant.get(
+            `payments/payment-details/${user_id}/${tripDetails.id}/`,
+            {
+              withCredentials: true,
+            }
+          );
+
+          console.log("Payment Details:", res.data);
+          setPaymentDetails(res.data);
+        }
+      } catch (error) {
+        console.error("Error fetching payment details:", error);
+      }
+    };
+
+    fetchPaymentDetails();
+  }, [tripDetails]);
+
+
+  const cancelTrip = async () => {
+    try {
+      const res = await userAxiosInstant.patch(`payments/strippayments/${paymentDetails.id}/`, {
+        payment: false,
+      });
+      toast.success('Trip Canceled Successfully')
+      setPaymentDetails({ ...paymentDetails, payment: false });
+      
+      console.log("Cancel Trip Response:", res.data);
+     } catch (error) {
+      console.error("Error canceling trip:", error);
+    }
+  };
+
+
   return (
     <>
       <ComplexNavbar />
@@ -55,19 +102,32 @@ export const TripDetailsPage = () => {
             <div className="mt-10 ml-36">
               <ChatBox recieverid={tripDetails.user} />
             </div>
-            <div className="flex  mx-36 gap-6">
-                <div className="rounded-lg  w-full bg-gray-100 p-4 text-black">
+            <div className="flex mx-36 gap-6">
+              <div className="rounded-lg w-full bg-gray-100 p-4 text-black">
                 <div className="text-lg font-semibold">Payment Option</div>
-                <div className="text-base"><HomePages props={tripDetails}/></div>
+                {paymentDetails && paymentDetails.payment !== null ? (
+                  paymentDetails.payment === false ? (
+                    <div className="text-base">
+                      <Payment props={tripDetails} />
+                    </div>
+                  ) : (
+                    <>
+                    <div className="text-base">"Welcome Travel Tide! You've successfully joined the trip package. Get ready for an amazing adventure! 🌍🎉"</div>
+                    <Button onClick={cancelTrip}>Cancel Trip</Button>
+                    </>
+                  )
+                ) : (
+                  <div className="text-base">Loading...</div>
+                )}
               </div>
-            
+
               <div className="rounded-lg  bg-gray-200 p-4 text-black ">
                 <div className="text-lg font-semibold">Budget</div>
                 <div className="text-3xl font-bold mt-2 ml-8">
                   ₹{tripDetails.budget}
                 </div>
               </div>
-              </div>
+            </div>
 
             <hr className="w-18 border-t border-gray-500 mt-24 mb-9 px-9" />
 
