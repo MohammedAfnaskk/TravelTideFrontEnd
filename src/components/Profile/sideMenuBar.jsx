@@ -50,7 +50,28 @@ export function SideMenuBar(props) {
             Trip Plans
           </button>
         </ListItem>
+        {role !== "user" && (
         <ListItem>
+          <ListItemPrefix>
+            <InboxIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          <button onClick={() => setDisplayedComponent("joinedTripmates")}>
+            Joined Tripmates
+          </button>
+          <ListItemSuffix>
+            <Chip
+              value="14"
+              size="sm"
+              variant="ghost"
+              color="blue-gray"
+              className="rounded-full"
+            />
+          </ListItemSuffix>
+        </ListItem>
+        )}
+        {role !== "guide" && (
+          <>
+                  <ListItem>
           <ListItemPrefix>
             <InboxIcon className="h-5 w-5" />
           </ListItemPrefix>
@@ -68,8 +89,6 @@ export function SideMenuBar(props) {
           </ListItemSuffix>
         </ListItem>
 
-        {role !== "guide" && (
-          <>
             <ListItem>
               <ListItemPrefix>
                 <CheckCircleIcon className="h-5 w-5" />

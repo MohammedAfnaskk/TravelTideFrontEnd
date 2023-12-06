@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useRef, Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PaperAirplaneIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import chatIcon from "../../../assets/image/chatIcon.png";
@@ -7,21 +7,27 @@ import { wsApiUrl } from "../../../constants/constants";
 import { userAxiosInstant } from "../../../utils/axiosUtils";
 import jwtDecode from "jwt-decode";
 
-export default function UserChat({recieverid}) {
+export default function UserChat({ recieverid }) {
   const [senderdetails, setSenderDetails] = useState({});
   const [recipientdetails, setRecipientDetails] = useState({});
-  const [clientstate, setClientState] = useState("");
+  const [clientstate, setClientState] = useState(null);
   const [messages, setMessages] = useState([]);
   const messageRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => {
     setIsOpen(false);
   };
-  // Chating onlick
+
   const onButtonClicked = () => {
-    if (messageRef.current.value.trim() == "") {
+    if (!clientstate || clientstate.readyState !== WebSocket.OPEN) {
+      console.error("WebSocket connection is not open.");
       return;
     }
+
+    if (messageRef.current.value.trim() === "") {
+      return;
+    }
+
     clientstate.send(
       JSON.stringify({
         message: messageRef.current.value,
@@ -29,8 +35,10 @@ export default function UserChat({recieverid}) {
         receiverUsername: recipientdetails.email,
       })
     );
+
     messageRef.current.value = "";
   };
+
   const setUpChat = () => {
     userAxiosInstant
       .get(
@@ -41,13 +49,16 @@ export default function UserChat({recieverid}) {
           setMessages(response.data);
         }
       });
+
     const client = new W3CWebSocket(
       `${wsApiUrl}/ws/chat/${senderdetails.id}/?${recipientdetails.id}`
     );
-    setClientState(client);
+
+    // Set up event listeners
     client.onopen = () => {
       console.log("WebSocket Client Connected");
     };
+
     client.onmessage = (message) => {
       const dataFromServer = JSON.parse(message.data);
       if (dataFromServer) {
@@ -61,47 +72,58 @@ export default function UserChat({recieverid}) {
       }
     };
 
-    client.onclose = () => {
-      console.log("Websocket disconnected", event.reason);
+    client.onerror = (error) => {
+      console.error("WebSocket Error:", error);
     };
 
+    client.onclose = (event) => {
+      console.log("WebSocket closed:", event.reason);
+    };
+
+    // Update the client state after the client is defined
+    setClientState(client);
+
+    // Return a cleanup function
     return () => {
       client.close();
     };
   };
+
   useEffect(() => {
     if (senderdetails.id != null && recipientdetails.id != null) {
       setUpChat();
     }
-    if (messageRef.current) {
-      messageRef.current.scrollTop = messageRef.current.scrollHeight;
-    }
   }, [senderdetails, recipientdetails]);
 
+  useEffect(() => {
+    console.log("WebSocket readyState:", clientstate?.readyState);
+  }, [clientstate]);
 
-//  Reciver fech
-const RecieverChat = async()=>{
- try {
-  const res = await userAxiosInstant.get(`/account/guide_details/${recieverid}`)
-  setRecipientDetails({
-    id:res.data.id,
-    email: res.data.email,
-    profile_image: res.data.profile_image
-  })
-  const token = localStorage.getItem('token')
-  const decoded = jwtDecode(token)
-  setSenderDetails({
-    id: decoded.user_id,
-    email: decoded.email
-  })
- } catch (error) {
-  console.log(error);
- }
+  const RecieverChat = async () => {
+    try {
+      const res = await userAxiosInstant.get(
+        `/account/guide_details/${recieverid}`
+      );
+      setRecipientDetails({
+        id: res.data.id,
+        email: res.data.email,
+        profile_image: res.data.profile_image,
+      });
 
-}
-useEffect(()=>{
-  RecieverChat()
-},[])
+      const token = localStorage.getItem("token");
+      const decoded = jwtDecode(token);
+      setSenderDetails({
+        id: decoded.user_id,
+        email: decoded.email,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    RecieverChat();
+  }, []);
 
   return (
     <Fragment>
@@ -144,12 +166,14 @@ useEffect(()=>{
                   placeholder="Type your message..."
                   className="flex-1 p-2 border rounded-md focus:outline-none"
                 />
-                <button
-                  onClick={onButtonClicked}
-                  className="ml-2 px-4 py-2 bg-green-500 text-white rounded-md"
-                >
-                  <PaperAirplaneIcon className="w-5 h-5" />
-                </button>
+                {clientstate && clientstate.readyState === WebSocket.OPEN && (
+                  <button
+                    onClick={onButtonClicked}
+                    className="ml-2 px-4 py-2 bg-green-500 text-white rounded-md"
+                  >
+                    <PaperAirplaneIcon className="w-5 h-5" />
+                  </button>
+                )}
               </div>
             </div>
           </Dialog>

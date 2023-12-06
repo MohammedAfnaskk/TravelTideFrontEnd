@@ -9,6 +9,7 @@ import { SideMenuBar } from './sideMenuBar';
 import { Invitation } from './tripInvitations';
 import { ManageTripmates } from './manageTripmates';
 import JoinedTrips from './JoinedTrips';
+import { ManageTripmatesGuide } from './manageTripmatesGuide';
 
 
 const Profile = () => {
@@ -32,6 +33,11 @@ const Profile = () => {
           {displayedComponent === 'myTripPlans' && (
             <div className="my-trip-plans-class">
               <MyTripPlans />
+            </div>
+          )}
+            {displayedComponent === 'joinedTripmates' && (
+            <div className="my-trip-plans-class">
+              <ManageTripmatesGuide/>
             </div>
           )}
             {displayedComponent === 'manageTripmates' && (
