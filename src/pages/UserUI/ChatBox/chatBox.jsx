@@ -40,9 +40,9 @@ export default function UserChat({ recieverid }) {
   };
 
   const setUpChat = () => {
-    userAxiosInstant
+    wsApiUrl
       .get(
-        `chat/user-previous-chats/${senderdetails.id}/${recipientdetails.id}/`
+        `chatserver/user-previous-chats/${senderdetails.id}/${recipientdetails.id}/`
       )
       .then((response) => {
         if (response.status == 200) {
@@ -50,9 +50,9 @@ export default function UserChat({ recieverid }) {
         }
       });
 
-    const client = new W3CWebSocket(
-      `${wsApiUrl}/ws/chat/${senderdetails.id}/?${recipientdetails.id}`
-    );
+      const client = new W3CWebSocket(
+        `${wsApiUrl}/ws/chat/${senderdetails.id}/?${recipientdetails.id}`
+      );
 
     // Set up event listeners
     client.onopen = () => {

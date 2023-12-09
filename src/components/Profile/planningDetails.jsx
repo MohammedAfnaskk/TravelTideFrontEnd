@@ -27,18 +27,22 @@ const MyTripPlans = () => {
 
   const handleOpen = (value) => setSize(value);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const decode = jwt_decode(token);
-    const guideId = decode.user_id;
-
-    GuideAxiosInstant.get(`/travel_manager/user_trip_plans/${guideId}/`)
-      .then((response) => {
+      
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const decode = jwt_decode(token);
+        const guideId = decode.user_id;
+  
+        const response = await GuideAxiosInstant.get(`/travel_manager/user_trip_plans/${guideId}/`);
         console.log("Response Data:", response.data);
         setMyTrips(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      });
+      }
+    };
+  
+    fetchData();
   }, []);
 
   const navigateToTripPage = (id) => {
