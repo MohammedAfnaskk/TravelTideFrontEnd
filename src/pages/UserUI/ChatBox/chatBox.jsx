@@ -94,7 +94,7 @@ export default function UserChat({ recieverid }) {
       }
     };
 
-    client.onclose = () => {
+    client.onclose = (event) => {
       console.log("Websocket disconnected", event.reason);
     };
 
