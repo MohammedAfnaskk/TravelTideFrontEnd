@@ -7,6 +7,7 @@ import Profile from '../components/Profile/profile'
 import GuideProtected from './ProtuctedRoutes/GuideProtected';
 import EditPlanningPage from "../pages/UserUI/TripEditing/mainPage";
 import { TripGuidingPage } from "../pages/UserUI/Travel Guide/mainPage";
+import UserChat from '../components/ChatBox/chatList';
 
 function GuideRoutes() {
   return (
@@ -19,7 +20,7 @@ function GuideRoutes() {
         <Route path='/guide-profile' element={<Profile/>}/>
         <Route path="/edit-trip" element={<EditPlanningPage/>} />
         <Route path="/trip-guiding" element={<TripGuidingPage />} />
-
+        <Route path="/chat-list" element={<UserChat/>}/>
 
      </Routes>
  

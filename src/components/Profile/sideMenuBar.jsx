@@ -15,7 +15,7 @@ import {
   BugAntIcon,
   CheckIcon,
   CheckCircleIcon,
-  TagIcon
+  TagIcon,ChatBubbleLeftRightIcon
 } from "@heroicons/react/24/solid";
 
 import jwt_decode from "jwt-decode";
@@ -51,6 +51,7 @@ export function SideMenuBar(props) {
           </button>
         </ListItem>
         {role !== "user" && (
+          <>
         <ListItem>
           <ListItemPrefix>
             <InboxIcon className="h-5 w-5" />
@@ -68,6 +69,26 @@ export function SideMenuBar(props) {
             />
           </ListItemSuffix>
         </ListItem>
+         
+         <ListItem>
+          <ListItemPrefix>
+            <ChatBubbleLeftRightIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          <button>
+            Chat 
+          </button>
+          <ListItemSuffix>
+            <Chip
+              value="4"
+              size="sm"
+              variant="ghost"
+              color="blue-gray"
+              className="rounded-full"
+            />
+          </ListItemSuffix>
+        </ListItem>
+        </>
+
         )}
         {role !== "guide" && (
           <>

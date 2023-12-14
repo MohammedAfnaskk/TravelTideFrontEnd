@@ -14,7 +14,7 @@ import { userAxiosInstant } from "../../../../utils/axiosUtils";
 import { ComplexNavbar } from "../../NavbarSemi/Nav";
 import Footer from "../../../../components/footer/footer";
 import { useParams } from "react-router-dom";
-import ChatBox from "../../ChatBox/chatBox";
+import ChatBox from "../../../../components/ChatBox/chatBox";
 import Payment from "../../../../components/Payment/payment";
 import jwt_decode from "jwt-decode";
 

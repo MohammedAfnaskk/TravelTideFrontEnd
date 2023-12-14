@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { PaperAirplaneIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import chatIcon from "../../../assets/image/chatIcon.png";
-import { wsApiUrl } from "../../../constants/constants";
-import { userAxiosInstant } from "../../../utils/axiosUtils";
+import {
+  PaperAirplaneIcon,
+  XMarkIcon,
+  ChatBubbleLeftIcon,
+  ChatBubbleLeftRightIcon,
+} from "@heroicons/react/24/solid";
+import chatIcon from "../../assets/image/chatIcon.png";
+import { wsApiUrl } from "../../constants/constants";
+import { userAxiosInstant } from "../../utils/axiosUtils";
 import jwtDecode from "jwt-decode";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
@@ -14,7 +19,7 @@ export default function UserChat({ recieverid }) {
   const [messages, setMessages] = useState([]);
   const messageRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
-
+  console.log("dexoo", messages);
   const onClose = () => {
     setIsOpen(false);
   };
@@ -46,7 +51,6 @@ export default function UserChat({ recieverid }) {
     RecieverChat();
   }, []);
 
-
   const onButtonClicked = () => {
     if (messageRef.current.value.trim() == "") {
       return;
@@ -72,25 +76,31 @@ export default function UserChat({ recieverid }) {
         }
       });
 
-      const client = new W3CWebSocket(
-        `${wsApiUrl}/ws/chat/${senderdetails.id}/?${recipientdetails.id}`
-      );
+    const client = new W3CWebSocket(
+      `${wsApiUrl}/ws/chat/${senderdetails.id}/?${recipientdetails.id}`
+    );
 
-      setClientState(client);
-      client.onopen = () => {
-        console.log("WebSocket Client Connected");
-      };
+    setClientState(client);
+    client.onopen = () => {
+      console.log("WebSocket Client Connected");
+    };
 
-     client.onmessage = (message) => {
+    client.onmessage = (message) => {
       const dataFromServer = JSON.parse(message.data);
       if (dataFromServer) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            message: dataFromServer.message,
-            sender_username: dataFromServer.senderUsername,
-          },
-        ]);
+        const isNewMessage = !messages.some(
+          (msg) => msg.message === dataFromServer.message
+        );
+
+        if (isNewMessage) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              message: dataFromServer.message,
+              sender_username: dataFromServer.senderUsername,
+            },
+          ]);
+        }
       }
     };
 
@@ -111,7 +121,6 @@ export default function UserChat({ recieverid }) {
       messageRef.current.scrollTop = messageRef.current.scrollHeight;
     }
   }, [senderdetails, recipientdetails]);
-
 
   return (
     <Fragment>
@@ -134,19 +143,37 @@ export default function UserChat({ recieverid }) {
                   </button>
                 </div>
               </div>
-
               <div className="h-80 overflow-y-auto mt-4 p-4">
                 {messages.map((message, index) => (
                   <div
                     key={index}
                     className={`${
                       message.sender === "user" ? "text-left" : "text-right"
-                    } mb-2`}
+                    } relative`}
                   >
-                    {message.text}
+                    <div
+                      className={`inline-block p-3 rounded-lg relative mt-2 ${
+                        message.sender === "user"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-gray-800"
+                      } shadow-md`}
+                    >
+                      {message.message}
+                      {/* Arrow */}
+                      <div
+                        className={`absolute ${
+                          message.sender === "user" ? "left-0" : "right-0"
+                        } -bottom-1 w-0 h-0 border-t-4 border-transparent ${
+                          message.sender === "user"
+                            ? "border-blue-500"
+                            : "border-gray-200"
+                        }`}
+                      ></div>
+                    </div>
                   </div>
                 ))}
               </div>
+
               <div className="mt-4 flex mb-3 p-4">
                 <input
                   type="text"
