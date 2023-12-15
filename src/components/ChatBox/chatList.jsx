@@ -1,141 +1,177 @@
-import  {React, useEffect, useRef, useState } from "react";
- // import Loader from "../../../components/Loading/Loading";
+import { React, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-import { ComplexNavbar } from '../../pages/GuideUI/GuideNavbar/navbar';
-import { FooterWithSocialLinks } from "../footer.jsx/footer";
-  function UserChat() {
-   const CompanyData = location.state && location.state.sel;
+import { ComplexNavbar } from "../../pages/GuideUI/GuideNavbar/navbar";
+import { userAxiosInstant } from "../../utils/axiosUtils";
+import { wsApiUrl } from "../../constants/constants";
+import jwtDecode from "jwt-decode";
+import { GetChatList } from "../../services/userApi";
+import { useLocation } from "react-router-dom";
+function UserChat() {
+    const location = useLocation();
+    const CompanyData = location.state && location.state.sel;
+  
+    const [ChatList, setChatList] = useState([]);
+    const [Search, setSearch] = useState("");
+    const [senderdetails, setSenderDetails] = useState({});
+    const [recipientdetails, setRecipientDetails] = useState({});
+    const [clientstate, setClientState] = useState("");
+    const [messages, setMessages] = useState([]);
+    const messageRef = useRef();
+    console.log('dexooires', recipientdetails);
+  
+    const RecieverChat = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const decoded = jwtDecode(token);
+        const senderDetailsResponse = await userAxiosInstant.get(
+            `/account/guide_details/${decoded.user_id}/`
+          );
+ 
+          if (senderDetailsResponse.data) {
+            setSenderDetails({
+              id: senderDetailsResponse.data.id,
+              email: decoded.email,
+              profile_image: decoded.profile_image,
+            });
+          } else {
+             console.error('Sender details not found');
+          }
+         
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    useEffect(() => {
+       RecieverChat();
+      if (CompanyData) {
+        setRecipientDetails({
+          id: CompanyData.Post.companyinfo.userId.id,
+          email: CompanyData.Post.companyinfo.userId.email,
+          profile_image: CompanyData.Post.companyinfo.userId.profile_image,
+        });
+      }
+    }, [CompanyData]);
+  
+   
 
-  const { UserInfo } = useSelector((state) => state.user);
-  const [CompanyList, setCompanyList] = useState([]);
-  const [Search, setSearch] = useState("");
+  const onButtonClicked = () => {
+    if (messageRef.current.value.trim() == "") {
+      return;
+    }
+    clientstate.send(
+      JSON.stringify({
+        message: messageRef.current.value,
+        senderUsername: senderdetails.email,
+        receiverUsername: recipientdetails.email,
+      })
+    );
+    messageRef.current.value = "";
+  };
 
-  const [senderdetails, setSenderDetails] = useState(UserInfo);
-  const [recipientdetails, setRecipientDetails] = useState({});
-  const [clientstate, setClientState] = useState("");
-  const [messages, setMessages] = useState([]);
-  const messageRef = useRef();
+  const setUpChat = () => {
+    userAxiosInstant
+      .get(
+        `chat/user-previous-chats/${senderdetails.id}/${recipientdetails.id}/`
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setMessages(response.data);
+        }
+      });
+    const client = new W3CWebSocket(
+      `${wsApiUrl}/ws/chat/${senderdetails.id}/?${recipientdetails.id}`
+    );
+    setClientState(client);
+    client.onopen = () => {
+      console.log("WebSocket Client Connected");
+    };
+    client.onmessage = (message) => {
+      const dataFromServer = JSON.parse(message.data);
+      console.log(dataFromServer, "daxooo");
+      if (dataFromServer) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            message: dataFromServer.message,
+            sender_email: dataFromServer.senderUsername,
+          },
+        ]);
+      }
+    };
 
-//   useEffect(() => {
-//     if (CompanyData) {
-//       setRecipientDetails({
-//         id: CompanyData.Post.companyinfo.userId.id,
-//         email: CompanyData.Post.companyinfo.userId.email,
-//         profile_image: CompanyData.Post.companyinfo.userId.profile_image,
-//       });
-//     }
-//   }, [CompanyData]);
-//   const onButtonClicked = () => {
-//     if (messageRef.current.value.trim() == "") {
-//       return;
-//     }
-//     clientstate.send(
-//       JSON.stringify({
-//         message: messageRef.current.value,
-//         senderUsername: senderdetails.email,
-//         receiverUsername: recipientdetails.email,
-//       })
-//     );
-//     messageRef.current.value = "";
-//   };
+    client.onclose = () => {
+      console.log("Websocket disconnected", event.reason);
+    };
 
-//   const setUpChat = () => {
-//     userAxiosInstant
-//       .get(
-//         `chat/user-previous-chats/${senderdetails.id}/${recipientdetails.id}/`
-//       )
-//       .then((response) => {
-//         if (response.status == 200) {
-//           setMessages(response.data);
-//         }
-//       });
-//     const client = new W3CWebSocket(
-//       `${wsApiUrl}/ws/chat/${senderdetails.id}/?${recipientdetails.id}`
-//     );
-//     setClientState(client);
-//     client.onopen = () => {
-//       console.log("WebSocket Client Connected");
-//     };
-//     client.onmessage = (message) => {
-//       const dataFromServer = JSON.parse(message.data);
-//       console.log(dataFromServer,'daxooo');
-//       if (dataFromServer) {
-//         setMessages((prevMessages) => [
-//           ...prevMessages,
-//           {
-//             message: dataFromServer.message,
-//             sender_email: dataFromServer.senderUsername,
-//           },
-//         ]);
-//       }
-//     };
+    return () => {
+      client.close();
+    };
+  };
 
-//     client.onclose = () => {
-//       console.log("Websocket disconnected", event.reason);
-//     };
+  useEffect(() => {
+    if (senderdetails.id != null && recipientdetails.id != null) {
+      setUpChat();
+    }
+    if (messageRef.current) {
+      messageRef.current.scrollTop = messageRef.current.scrollHeight;
+    }
+  }, [senderdetails, recipientdetails]);
 
-//     return () => {
-//       client.close();
-//     };
-//   };
-//   useEffect(() => {
-//     if (senderdetails.id != null && recipientdetails.id != null) {
-//       setUpChat();
-//     }
-//     if (messageRef.current) {
-//       messageRef.current.scrollTop = messageRef.current.scrollHeight;
-//     }
-//   }, [senderdetails, recipientdetails]);
+  const HandleSearch = async (e) => {
+    setSearch(e.target.value);
+    try {
+      const res = await GetChatList(senderdetails.id, e.target.value);
+      if (res && res.data) {
+        setChatList(res.data);
+      } else {
+         console.error('Data not found in the response');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-//   //  For Searching
-//   const HandleSearch = async (e) => {
-//     setSearch(e.target.value);
-//     try {
-//       const res = await CompaniesList(UserInfo.id, e.target.value);
-//       setCompanyList(res.data);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-//   // Clear data
-//   const clearSearchAndFetchAll = async () => {
-//     setSearch("");
-//     try {
-//       const res = await CompaniesList(UserInfo.id, "");
-//       setCompanyList(res.data);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-//   // Data fech in backend
-//   async function GetCompanyList() {
-//     try {
-//       const res = await CompaniesList(UserInfo.id, Search);
-//       setCompanyList(res.data);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
+  // Clear data
+  const clearSearchAndFetchAll = async () => {
+    setSearch("");
+    try {
+      const res = await GetChatList(senderdetails.id, "");
+      setChatList(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-//   //---------------------------- React quary---------------------------------------//
-//   const { data, isLoading, isError } = useQuery(
-//     "GetCompanyList",
-//     GetCompanyList
-//   );
-//   if (isLoading) {
-//     return <Loader />;
-//   }
+  // Data fech in backend
+  async function ChatLists() {
+    try {
+      const res = await GetChatList(senderdetails.id, Search);
+      setChatList(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-//   if (isError) {
-//     return <h1>There was an error fetching data</h1>;
-//   }
+  //   //---------------------------- React quary---------------------------------------//
+  //   const { data, isLoading, isError } = useQuery(
+  //     "GetCompanyList",
+  //     GetCompanyList
+  //   );
+  //   if (isLoading) {
+  //     return <Loader />;
+  //   }
+
+  //   if (isError) {
+  //     return <h1>There was an error fetching data</h1>;
+  //   }
   //---------------------------- React quary---------------------------------------//
 
   return (
     <>
-   <ComplexNavbar/>
-       <div className=" mx-auto flex justify-center items-center ">
+      <ComplexNavbar />
+      <div className=" mx-auto flex justify-center items-center ">
         <div className="border   rounded-2xl shadow grid grid-cols-[20rem,1fr] w-full ">
           <div className="border-e grid grid-rows-[5rem,1fr]">
             <div className="flex justify-center items-center">
@@ -163,7 +199,7 @@ import { FooterWithSocialLinks } from "../footer.jsx/footer";
                     placeholder="Search"
                     type="text"
                     value={Search}
-                    // onChange={HandleSearch}
+                    onChange={HandleSearch}
                     className="bg-transparent  w-full text-gray-800 placeholder-gray-700 text-sm focus:outline-none"
                   />
                 </div>
@@ -193,38 +229,38 @@ import { FooterWithSocialLinks } from "../footer.jsx/footer";
             <div className="mx-4">
               <p className="font-bold text-gray-800">Chat</p>
 
-              {CompanyList.length > 0 ? (
-                CompanyList.map((company, index) => (
+              {ChatList.length > 0 ? (
+                ChatList.map((user, index) => (
                   <div
                     key={index}
-                    className="bg-purple-50 cursor-pointer rounded-xl my-3 grid grid-cols-[3.5rem,1fr,2rem]"
+                    className="bg-blue-gray-50 cursor-pointer rounded-xl my-3 grid grid-cols-[3.5rem,1fr,2rem]"
                     onClick={() =>
                       setRecipientDetails({
-                        id: company.userId,
-                        email: company.email,
-                        profile_image: company.profile_image,
-                        company_name : company.company_name,
+                        id: user?.receiver,
+                        email: user?.receiver_email,
+                        name: user?.receiver_name,
+                        profile_image: user?.receiver_profile,
                       })
                     }
                   >
                     <div className="rounded-full flex justify-center items-center my-1 ms-2 w-10 h-10">
                       <img
-                        src={company.profile_image || defaultprofile}
+                        src={user?.receiver_profile || ""}
                         alt=""
                         className="rounded-full h-9 w-9 border"
                       />
                     </div>
                     <div className="flex justify-start items-center">
                       <p className="text-gray-800 capitalize">
-                        {company.company_name}
+                        {user?.receiver_name}
                       </p>
                     </div>
-                    <div>{company.someValue}</div>
+                    <div>{user?.someValue}</div>
                   </div>
                 ))
               ) : (
-                <p className="text-center font-bold text-gray-600">
-                  No companies found
+                <p className="text-center font-serif text-gray-600">
+                  No Users found
                 </p>
               )}
             </div>
@@ -244,12 +280,14 @@ import { FooterWithSocialLinks } from "../footer.jsx/footer";
                     className="rounded-full h-9 w-9"
                   />
                 </div>
-                <p className="ms-2 text-gray-800 capitalize">{recipientdetails.company_name}</p>
+                <p className="ms-2 text-gray-800 capitalize">
+                  {recipientdetails.company_name}
+                </p>
               </div>
               <div className="grid grid-rows-[1fr,4rem]">
                 <div class="p-4 overflow-auto h-[44.4rem]">
                   {messages.map((message, index) =>
-                    senderdetails.email === message.sender_email? (
+                    senderdetails.email === message.sender_email ? (
                       <>
                         <div class="flex justify-end mb-2" key={index}>
                           <div class="bg-purple-50 shadow border text-gray-800 py-1 px-4 rounded-md max-w-xs">
@@ -322,7 +360,7 @@ import { FooterWithSocialLinks } from "../footer.jsx/footer";
           )}
         </div>
       </div>
-        </>
+    </>
   );
 }
 

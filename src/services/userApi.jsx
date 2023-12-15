@@ -97,6 +97,13 @@ const GuidingTripList = (search) => {
     });
 };
 
+const GetChatList = (sender_id , search) =>{
+  return userAxiosInstant.get(`/chatserver/chatlist/${sender_id}/?search=${search}`, {withCredentials:true})
+}
+
+const AddtoChatList = (value) =>{
+  return userAxiosInstant.post("/chat/addtochat/" , value , {withCredentials:true})
+}
 
 //------------------------------ PATCH METHODS----------------------------------------------
 
@@ -123,9 +130,11 @@ export {
   TripPlanning,
   TripPlanningData,
   InviteFriends,
+  GetChatList,
 
   EditTripPlanning,
   EditPlanningData,
   GuidingTripList,
   TripPackage,
+
 };
