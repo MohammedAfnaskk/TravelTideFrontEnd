@@ -14,6 +14,7 @@ export default withMT({
       height: {
         '550': '550px',
          '450': '450px',
+         '600':'615px',
  
       },
       width:{

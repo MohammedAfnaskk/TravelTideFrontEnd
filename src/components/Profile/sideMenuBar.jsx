@@ -19,12 +19,13 @@ import {
 } from "@heroicons/react/24/solid";
 
 import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 export function SideMenuBar(props) {
   const { setDisplayedComponent } = props;
   const [open, setOpen] = React.useState(0);
   const [openAlert, setOpenAlert] = React.useState(true);
-
+  const navigate = useNavigate()
   const token = localStorage.getItem("token");
   const decode = jwt_decode(token);
   const role = decode.role;
@@ -33,8 +34,12 @@ export function SideMenuBar(props) {
     setOpen(open === value ? 0 : value);
   };
 
+  const handleNavigate =()=>{
+    navigate('/guide/chat-list')
+  }
+
   return (
-    <Card className="  h-80 bg-gray-300 w-full max-w-[17.5rem] p-4 mt-10 border border-gray-300">
+    <Card className="  h-84 bg-gray-300 w-full max-w-[17.5rem] p-4 mt-10 border border-gray-300">
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray">
           Settings
@@ -50,6 +55,25 @@ export function SideMenuBar(props) {
             Trip Plans
           </button>
         </ListItem>
+
+        <ListItem>
+          <ListItemPrefix>
+            <ChatBubbleLeftRightIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          <button onClick={handleNavigate}>
+            Chat 
+          </button>
+          <ListItemSuffix>
+            <Chip
+              value="4"
+              size="sm"
+              variant="ghost"
+              color="blue-gray"
+              className="rounded-full"
+            />
+          </ListItemSuffix>
+        </ListItem>
+
         {role !== "user" && (
           <>
         <ListItem>
@@ -70,23 +94,7 @@ export function SideMenuBar(props) {
           </ListItemSuffix>
         </ListItem>
          
-         <ListItem>
-          <ListItemPrefix>
-            <ChatBubbleLeftRightIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <button>
-            Chat 
-          </button>
-          <ListItemSuffix>
-            <Chip
-              value="4"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            />
-          </ListItemSuffix>
-        </ListItem>
+   
         </>
 
         )}

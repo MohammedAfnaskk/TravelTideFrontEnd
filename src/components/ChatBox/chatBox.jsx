@@ -38,9 +38,12 @@ export default function UserChat({ recieverid }) {
 
       const token = localStorage.getItem("token");
       const decoded = jwtDecode(token);
+      const response = await userAxiosInstant.get(
+        `/account/guide_details/${decoded.user_id}/`);
       setSenderDetails({
         id: decoded.user_id,
         email: decoded.email,
+        profile_image:response.data.profile_image,
       });
     } catch (error) {
       console.error(error);
@@ -48,6 +51,7 @@ export default function UserChat({ recieverid }) {
   };
 
   useEffect(() => {
+ 
     RecieverChat();
   }, []);
 
@@ -87,19 +91,23 @@ export default function UserChat({ recieverid }) {
 
     client.onmessage = (message) => {
       const dataFromServer = JSON.parse(message.data);
+      console.log('Received message from server:', dataFromServer);
       if (dataFromServer) {
         const isNewMessage = !messages.some(
           (msg) => msg.message === dataFromServer.message
         );
-
+ 
         if (isNewMessage) {
           setMessages((prevMessages) => [
             ...prevMessages,
             {
               message: dataFromServer.message,
-              sender_username: dataFromServer.senderUsername,
+              sender_email: dataFromServer.senderUsername,
+
             },
           ]);
+          console.log('New message added to state:', dataFromServer.message);
+
         }
       }
     };
@@ -144,35 +152,48 @@ export default function UserChat({ recieverid }) {
                 </div>
               </div>
               <div className="h-80 overflow-y-auto mt-4 p-4">
-                {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`${
-                      message.sender === "user" ? "text-left" : "text-right"
-                    } relative`}
-                  >
-                    <div
-                      className={`inline-block p-3 rounded-lg relative mt-2 ${
-                        message.sender === "user"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-800"
-                      } shadow-md`}
-                    >
-                      {message.message}
-                      {/* Arrow */}
-                      <div
-                        className={`absolute ${
-                          message.sender === "user" ? "left-0" : "right-0"
-                        } -bottom-1 w-0 h-0 border-t-4 border-transparent ${
-                          message.sender === "user"
-                            ? "border-blue-500"
-                            : "border-gray-200"
-                        }`}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                   {messages.map((message, index) =>
+                    senderdetails.email === message.sender_email ? (
+                      <>
+                        <div class="flex justify-end mb-2" key={index}>
+                          <div class=" shadow  text-white  bg-[#262626] py-1 px-4 rounded-md max-w-xs">
+                            {message.message}
+                          </div>
+                          <div className="rounded-full flex justify-center items-center -me-3 ms-2 w-10 h-10 ">
+                            <img
+                              src={
+                                senderdetails.profile_image
+                                  ? senderdetails.profile_image
+                                  : ''
+                              }
+                              alt=""
+                              className="rounded-full w-10 h-10"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div class="flex mb-2" key={index}>
+                          <div className="rounded-full flex justify-center items-center -ms-4 me-1 w-10 h-10 ">
+                            <img
+                              src={
+                                recipientdetails.profile_image
+                                  ? recipientdetails.profile_image
+                                  : ''
+                              }
+                              alt=""
+                              className="rounded-full w-10 h-10"
+                            />
+                          </div>
+                          <div class="shadow py-1 px-4  text-white bg-[#262626] rounded-md max-w-xs">
+                            {message.message}
+                          </div>
+                        </div>
+                      </>
+                    )
+                  )}
+                </div>
 
               <div className="mt-4 flex mb-3 p-4">
                 <input
