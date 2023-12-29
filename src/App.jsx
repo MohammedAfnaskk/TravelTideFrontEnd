@@ -10,33 +10,23 @@ import UserRoutes from './routes/UserRoute';
 import GuideRoutes from './routes/GuideRoute';
 import AdminRoutes from './routes/AdminRoute';
 import PrivateRoutes from './routes/ProtuctedRoutes/PrivateRoute';
-   
+import ForgotPassword from './components/Authentication/UserAuth/forgotPassword';
+import ResetPassword from './components/Authentication/UserAuth/resetPassword';
 
 function App() {
  
 
   return (
     <div>
-       {/* // <Router>
-      // <Routes>
-      // <Route element={<PrivateRoutes/>}>
-      // <Route path="/" element={<Home />} />
-      // <Route path="/register-resendmail" element={<MailConfirm />} />
-      // <Route path="/user_role" exact element={<UserRole />} />
-      // </Route>
-
-      //   <Route path="/user/*" element={<UserRoutes />} />
-      //   <Route path="/guide/*" element={<GuideRoutes />} />
-      //   <Route path="/admin/*" element={<AdminRoutes />} />
- 
-      // </Routes>     
-      // </Router> */}
+    
 
       <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register-resendmail" element={<MailConfirm />} />
               <Route path="/user_role" exact element={<UserRole />} />
+              <Route path="/forgot-password" element={<ForgotPassword/>}/>
+              <Route path="/resetpassword" element={<ResetPassword/>}/>
         </Routes>
 
         <Routes>

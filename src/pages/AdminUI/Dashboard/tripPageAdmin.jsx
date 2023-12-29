@@ -21,7 +21,7 @@ export const AdminTripGuidingPage = () => {
   const fetchData = async () => {
     try {
       const response = await userAxiosInstant.get(
-        `/travel_manager/MainPlaceViewSetsingleView/${id}/`
+        `/travel_manager/MainPlaceViewSetsingleView/${id}`
       );
       console.log("Response Data:", response.data);
       setTripDetails(response.data);
@@ -45,15 +45,19 @@ export const AdminTripGuidingPage = () => {
       <div className="relative overflow-y-auto">
         {error && <p>Error fetching trip details: {error.message}</p>}
         {tripDetails && (
-          <div>
-            <img
-              className="w-full h-96 object-cover relative z-10"
-              src={tripDetails.place_image}
-              alt="nature image"
-            />
-            <div className="absolute top-56 lg:ml-32 h-44 ml-16 w-8/12 flex justify-items-center z-20">
-              <PlaceCard tripDetails={tripDetails} />
+           <div>
+           <img
+             className="w-full h-450 object-cover relative z-10"
+             src={tripDetails.place_image}
+             alt="nature image"
+           />
+           <div className="absolute top-96 h-44 ml-10 w-8/12 z-20">
+           <Typography color="white" className="mb-20  font-bold text-4xl">
+           Trip to {tripDetails.main_place}
+         </Typography>
+
             </div>
+
 
             <hr className="w-18 border-t border-gray-500 mt-24 mb-9 px-9" />
 

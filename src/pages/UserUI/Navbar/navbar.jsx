@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   MobileNav,
@@ -24,17 +24,38 @@ import {
 import Login from "../../../components/Authentication/UserAuth/login";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { userAxiosInstant } from "../../../utils/axiosUtils";
+import jwt_decode from "jwt-decode";
 
 function ProfileMenu() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
+  const [userData, setUserData] = useState({});
   const closeMenu = () => setIsMenuOpen(false);
+  const token = localStorage.getItem("token");
+  const decode = jwt_decode(token);
+  const userId = decode.user_id;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await userAxiosInstant.get(
+          `/account/guide_details/${userId}/`
+        );
+        console.log(response.data);
+        setUserData(response.data);
+      } catch (error) {
+        console.error("User data not found", error);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     isAuthenticated();
-    navigate('/user')
+    navigate("/user");
     window.location.reload();
   };
 
@@ -44,7 +65,7 @@ function ProfileMenu() {
       icon: UserCircleIcon,
       path: "/user/user-profile/",
     },
-    
+
     {
       label: "Sign Out",
       icon: PowerIcon,
@@ -65,7 +86,11 @@ function ProfileMenu() {
             size="sm"
             alt="tania andrew"
             className="border border-gray-900 p-0.5"
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+            src={
+              userData
+                ? userData.profile_image
+                : "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+            }
           />
           <ChevronDownIcon
             strokeWidth={2.5}

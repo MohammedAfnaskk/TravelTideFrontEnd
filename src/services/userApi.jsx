@@ -49,6 +49,20 @@ const UserGoogleSignin = (value) => {
   });
 };
 
+
+const forgotPassword = (value) => {
+  console.log("Data being sent to the backend:", value);
+  return userAxiosInstant.post("account/forgotpassword/", value, {
+    withCredentials: true,
+  });
+};
+
+const resetPassword = (token,value) => {
+  console.log("Data being sent to the backend:", value);
+  return userAxiosInstant.post(`account/reset-password/${token}/`, value, {
+    withCredentials: true,
+  });
+};
 // Create TripPlan
 const TripPlanning = (value) => {
   console.log("Data being sent to the backend:", value);
@@ -124,11 +138,13 @@ export {
   UserGoogleSignup,
   UserGoogleSignin,
   TokenRefresh,
+  forgotPassword,
+  resetPassword,
   TripPlanning,
   TripPlanningData,
   InviteFriends,
   GetChatList,
-
+  
   EditTripPlanning,
   EditPlanningData,
   GuidingTripList,

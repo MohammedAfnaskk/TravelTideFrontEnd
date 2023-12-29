@@ -3,7 +3,7 @@ import { Card, Typography, dialog } from "@material-tailwind/react";
 import { userAxiosInstant } from "../../utils/axiosUtils";
 import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-
+import UserChat from "../ChatBox/chatBox";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -121,6 +121,9 @@ export function ManageTripmatesGuide() {
                     >
                       {row.payment ? "Success" : "Canceled"}
                     </Typography>
+                  </td>
+                  <td className="p-4">
+                   <UserChat recieverid={row.user}/>
                   </td>
                 </tr>
               ))}

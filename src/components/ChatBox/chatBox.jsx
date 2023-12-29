@@ -19,7 +19,7 @@ export default function UserChat({ recieverid }) {
   const [messages, setMessages] = useState([]);
   const messageRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
-  console.log("dexoo", messages);
+  console.log("dexoo", recieverid);
   const onClose = () => {
     setIsOpen(false);
   };
@@ -50,10 +50,13 @@ export default function UserChat({ recieverid }) {
     }
   };
 
+  
+
   useEffect(() => {
- 
     RecieverChat();
   }, []);
+   
+
 
   const onButtonClicked = () => {
     if (messageRef.current.value.trim() == "") {
@@ -70,6 +73,8 @@ export default function UserChat({ recieverid }) {
   };
 
   const setUpChat = () => {
+    
+
     userAxiosInstant
       .get(
         `chatserver/user-previous-chats/${senderdetails.id}/${recipientdetails.id}/`
@@ -89,6 +94,7 @@ export default function UserChat({ recieverid }) {
       console.log("WebSocket Client Connected");
     };
 
+    
     client.onmessage = (message) => {
       const dataFromServer = JSON.parse(message.data);
       console.log('Received message from server:', dataFromServer);
@@ -106,6 +112,7 @@ export default function UserChat({ recieverid }) {
 
             },
           ]);
+         
           console.log('New message added to state:', dataFromServer.message);
 
         }
@@ -122,13 +129,16 @@ export default function UserChat({ recieverid }) {
   };
 
   useEffect(() => {
-    if (senderdetails.id != null && recipientdetails.id != null) {
+     if (senderdetails.id != null && recipientdetails.id != null) {
       setUpChat();
     }
     if (messageRef.current) {
       messageRef.current.scrollTop = messageRef.current.scrollHeight;
     }
   }, [senderdetails, recipientdetails]);
+  
+  
+
 
   return (
     <Fragment>

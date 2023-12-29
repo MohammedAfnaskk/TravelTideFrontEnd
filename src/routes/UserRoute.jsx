@@ -31,7 +31,7 @@ function UserRoutes() {
         element={<InviteeTripPage />}
       />
       <Route path="/edit-trip" element={<EditPlanningPage/>} />
- 
+  
     </Routes>
   );
 }
