@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Navbar,
   MobileNav,
@@ -24,10 +24,32 @@ import {
 import Login from "../../../components/Authentication/UserAuth/login";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
+import jwt_decode from "jwt-decode";
+import { userAxiosInstant } from "../../../utils/axiosUtils";
+ 
 function ProfileMenu() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [userData, setUserData] = useState({});
+  const token = localStorage.getItem("token");
+  const decode = jwt_decode(token);
+  const userId = decode.user_id;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await userAxiosInstant.get(
+          `/account/guide_details/${userId}/`
+        );
+        console.log(response.data);
+        setUserData(response.data);
+      } catch (error) {
+        console.error("User data not found", error);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -60,12 +82,16 @@ function ProfileMenu() {
           color="blue-gray"
           className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
         >
-          <Avatar
+            <Avatar
             variant="circular"
             size="sm"
             alt="tania andrew"
             className="border border-gray-900 p-0.5"
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+            src={
+              userData
+                ? userData.profile_image
+                : "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+            }
           />
           <ChevronDownIcon
             strokeWidth={2.5}
@@ -127,41 +153,11 @@ const navListItems = [
     path: "/guide/trip-guiding",
   },
   
-  {
-    search: (
-      <div className="ml-24">
-        <Input
-          type="search"
-          label="Type here..."
-          containerProps={{
-            className: "min-w-auto",
-          }}
-        />
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-gray-400 absolute right-2 top-2" // Position the icon using absolute positioning
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          onClick={() => {
-            // Handle the search icon click event here
-          }}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6M9 2a7 7 0 110 14 7 7 0 010-14z"
-          />
-        </svg>
-      </div>
-    ),
-  },
 ];
 
 function NavList() {
   return (
-    <div className="mb-4 mt-3 flex flex-col gap-2  lg:mt-3 lg:flex-row mr-4 ">
+    <div className="mb-4 mt-3 flex flex-col gap-2  lg:mt-3 lg:flex-row mr-96 ">
       {navListItems.map((item, index) => (
         <div key={index} className="flex items-center">
           <Typography

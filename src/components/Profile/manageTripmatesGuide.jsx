@@ -45,7 +45,7 @@ export function ManageTripmatesGuide() {
   return (
     <>
       <div className="flex text-2xl font-bold gap-20 justify-center">
-        <h4>MANAGE TRIPMATES P</h4>
+        <h4>MANAGE TRIPMATES </h4>
       </div>
       <hr className="w-full border-t border-gray-500 mt-3" />
       {user_payments.length === 0 ? (

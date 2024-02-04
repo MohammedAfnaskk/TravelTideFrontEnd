@@ -147,36 +147,8 @@ const navListItems = [
   {
     label: "Plan a trip",
    },
-   {
-    
-  search: <div className="ml-24">
-  <Input
-    type="search"
-    label="Type here..."
-     containerProps={{
-      className: "min-w-auto",
-    }}
-  />
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6 text-gray-400 absolute right-2 top-2" // Position the icon using absolute positioning
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    onClick={() => {
-      // Handle the search icon click event here
-    }}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M21 21l-6-6M9 2a7 7 0 110 14 7 7 0 010-14z"
-    />
-  </svg>
-  </div> 
-  },
-];
+   
+ ];
  
 
 

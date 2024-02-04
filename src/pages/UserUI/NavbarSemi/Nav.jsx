@@ -26,6 +26,7 @@ const navListItems = [
       path: "/user/trip-guiding",
 
      },
+     
      {
       label: "Plan a Trip",
       path: "/user/trip-join"

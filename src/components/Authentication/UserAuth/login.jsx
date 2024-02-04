@@ -8,6 +8,7 @@ import { UserGoogleSignin, userSignin } from "../../../services/userApi";
 import { useGoogleLogin } from "@react-oauth/google";
 import google from "../../../assets/image/icon.jpg";
 import ForgotPassword from "./forgotPassword";
+import Loading from "../../LoadingAnimation/Loading";
 import {
   Button,
   Dialog,
@@ -66,6 +67,7 @@ const Login = ({}) => {
   const FormHandlerLogin = async (e) => {
     e.preventDefault();
     if (Validation()) {
+      handleLoading();
       try {
         const res = await userSignin(user);
         if (res.status === 200) {
@@ -86,7 +88,9 @@ const Login = ({}) => {
           console.log(res.status);
           toast.error("Invalid login credentials or verify your email");
         }
+        handleLoading();
       } catch (error) {
+        handleLoading();
         console.error("An error occurred during login:", error);
         toast.error("An error occurred during login. Please try again later.");
       }
@@ -140,7 +144,7 @@ const Login = ({}) => {
       GoogleAuth();
     }
   }, [guser]);
- 
+
   return (
     <>
       <Button
@@ -203,9 +207,10 @@ const Login = ({}) => {
                 variant="small"
                 href="forgot-password"
                 className="ml-2"
-                 >
+              >
                 Forgot Password
-               </Typography>
+              </Typography>
+              {loading && <Loading />}
             </CardBody>
             <CardFooter className="pt-0">
               <Button variant="gradient" type="submit" fullWidth>
@@ -216,9 +221,9 @@ const Login = ({}) => {
                 Don&apos;t have an account?
                 <Typography
                   as="a"
-                  href="#signup"
+                  href="/"
                   variant="small"
-                  color="blue"
+                  style={{ color: "#f75940" }}
                   className="ml-1 font-bold"
                 >
                   Sign Up

@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { TripPlanning, TripPlanningData } from '../../../services/userApi';
 import { useNavigate } from 'react-router-dom';
-
+import Loading from '../../../components/LoadingAnimation/Loading';
 
 const TripPlanningTable = () => {
   const navigate = useNavigate()
@@ -19,6 +19,9 @@ const TripPlanningTable = () => {
   const token = localStorage.getItem('token')
   const decode = jwt_decode(token)
 
+  //  For loading
+  const [loading, setLoading] = useState(false);
+  const handleLoading = () => setLoading((cur) => !cur);
 
   const fileInputRef = useRef(null);
 
@@ -70,6 +73,13 @@ const TripPlanningTable = () => {
   };
 
   const handleInputChange = (event, index, field) => {
+    const currentDate = new Date();
+  const selectedDate = new Date(event.target.value);
+
+  if (selectedDate < currentDate) {
+    toast.error("Please select a future date");
+    return;
+  }
     const updatedEntries = [...entries];
     updatedEntries[index][field] = event.target.value;
     setEntries(updatedEntries);
@@ -149,6 +159,7 @@ const TripPlanningTable = () => {
       return;
     }
 
+    handleLoading();
 
     try {
       const response = await TripPlanning(formData, {
@@ -182,9 +193,10 @@ const TripPlanningTable = () => {
           console.log('Response:', response);
         }
       }
-
+      handleLoading();
       navigate('/guide/trip-page-guide/', { state: { id } })
     } catch (error) {
+      handleLoading();
       console.log("response trip data", error);
       toast.error('Error while saving entries');
 
@@ -199,6 +211,7 @@ const TripPlanningTable = () => {
     <div>
 
       <ComplexNavbar />
+      {loading && <Loading />}
 
       {/* Add more content */}
       <div className="relative overflow-y-auto">
@@ -221,7 +234,7 @@ const TripPlanningTable = () => {
 
           {/* Image */}
           <img
-            className="w-full lg:h-64 object-cover relative z-10 cursor-pointer"
+            className="w-full lg:h-72 object-cover relative z-10 cursor-pointer"
             src={imageUrl}
             alt="nature image"
             onClick={handleEditClick}
@@ -246,12 +259,13 @@ const TripPlanningTable = () => {
 
         {entries.map((entry, index) => (
           <div key={index} className="mt-10">
-
+          {index !== 0 && (
             <div className="mb-8   inline-flex  ml-10">
               <button onClick={() => handleDeleteEntry(index)} className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded">
-                <FontAwesomeIcon icon={faTrash} /> {/* Use the delete icon here */}
+                <FontAwesomeIcon icon={faTrash} />  
               </button>
             </div>
+          )}
             <div className="  px-10">
               <p className="mb-2 font-bold">Place</p>
               <Input
@@ -291,6 +305,7 @@ const TripPlanningTable = () => {
                 label="Date"
                 value={entry.date}
                 onChange={(e) => handleInputChange(e, index, 'date')}
+
               />
             </div>
 

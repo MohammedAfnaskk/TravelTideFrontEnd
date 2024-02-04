@@ -79,7 +79,7 @@ function UserRole() {
              </button>
           </div>
         <div className="flex justify-center mt-5 mb-8">
-          <p className="text-sm p-1">Already have an account? <Link className="text-[#f75940] ps-1 text-sm" to="/login">Log In</Link></p>
+          <p className="text-sm p-1">Already have an account? <Link className="text-[#f75940] ps-1 text-sm" to="/">Log In</Link></p>
         </div>
       </div>
     </div>

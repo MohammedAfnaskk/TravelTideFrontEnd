@@ -13,7 +13,7 @@ import jwt_decode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { TripPlanning, TripPlanningData } from "../../../services/userApi";
 import { useNavigate } from "react-router-dom";
-
+import Loading from "../../../components/LoadingAnimation/Loading";
 const TripPlanningTable = () => {
   const navigate = useNavigate();
 
@@ -21,6 +21,10 @@ const TripPlanningTable = () => {
   const decode = jwt_decode(token);
 
   const fileInputRef = useRef(null);
+
+  //  For loading
+  const [loading, setLoading] = useState(false);
+  const handleLoading = () => setLoading((cur) => !cur);
 
   const handleFileChange = (event) => {
     const selectedImage = event.target.files[0];
@@ -154,7 +158,7 @@ const TripPlanningTable = () => {
       toast.error("Budget field is required");
       return;
     }
-
+    handleLoading();
     try {
       const response = await TripPlanning(formData, {
         headers: {
@@ -189,8 +193,10 @@ const TripPlanningTable = () => {
           console.log("Response:", response);
         }
       }
+      handleLoading();
       navigate("/user/trip-page/", { state: { id } });
     } catch (error) {
+      handleLoading();
       console.log("response trip data", error);
       toast.error("Error while saving entries");
     }
@@ -199,6 +205,7 @@ const TripPlanningTable = () => {
   return (
     <div>
       <ComplexNavbar />
+      {loading && <Loading />}
 
       {/* Add more content */}
       <div className="relative overflow-y-auto">
@@ -218,7 +225,7 @@ const TripPlanningTable = () => {
 
           {/* Image */}
           <img
-            className="w-full lg:h-64 object-cover relative z-10 cursor-pointer"
+            className="w-full lg:h-72 object-cover relative z-10 cursor-pointer"
             src={imageUrl}
             alt="nature image"
             onClick={handleEditClick}
@@ -245,15 +252,17 @@ const TripPlanningTable = () => {
 
         {entries.map((entry, index) => (
           <div key={index} className="mt-10">
-            <div className="mb-8   inline-flex  ml-10">
-              <button
-                onClick={() => handleDeleteEntry(index)}
-                className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded"
-              >
-                <FontAwesomeIcon icon={faTrash} />{" "}
-                {/* Use the delete icon here */}
-              </button>
-            </div>
+            {index !== 0 && (
+              <div className="mb-8   inline-flex  ml-10">
+                <button
+                  onClick={() => handleDeleteEntry(index)}
+                  className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded"
+                >
+                  <FontAwesomeIcon icon={faTrash} />{" "}
+                  {/* Use the delete icon here */}
+                </button>
+              </div>
+            )}
             <div className="  px-10">
               <p className="mb-2 font-bold">Place</p>
               <Input

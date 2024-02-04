@@ -1,4 +1,3 @@
-  
 import {
   Button,
   Dialog,
@@ -9,21 +8,19 @@ import {
   Input,
   Checkbox,
 } from "@material-tailwind/react";
-import google from '../../../assets/image/icon.jpg'
+import google from "../../../assets/image/icon.jpg";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from "@react-oauth/google";
 import { UserGoogleSignup } from "../../../services/userApi";
 import axios from "axios";
 import { GuideGoogleSignup } from "../../../services/guideApi";
 import jwtDecode from "jwt-decode";
- 
+import Loading from "../../LoadingAnimation/Loading";
 
-export function SignUpWithForm({open,handleOpen,selectedOption}) {
- 
-
+export function SignUpWithForm({ open, handleOpen, selectedOption }) {
   const navigate = useNavigate();
 
   const [other, setOther] = useState({ cpassword: "", check: false });
@@ -33,15 +30,11 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
     password: "",
     role: "",
   });
- 
-  //  For loading
-  const [loading, setLoading] = useState(false);
-  const handleLoading = () => setLoading((cur) => !cur);
-  
+
   // For google registratin
   const [guser, setgUser] = useState([]);
   console.log(user);
-  
+
   // Validations
   const isValidEmail = (email) => {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -78,34 +71,39 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
     return true;
   };
 
+  const [loading, setLoading] = useState(false);
+  const handleLoading = (value) => setLoading(value);
+
   //   After form submition
   const FormHandlerSignup = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      user.email= user.email;
-      handleLoading();
+      user.email = user.email;
+      handleLoading(true);
+
       try {
+
         const response = await axios.post(
           import.meta.env.VITE_BASE_USER_URL + "/account/register/",
           user
         );
-        localStorage.setItem('email',user.email)
+        localStorage.setItem("email", user.email);
         console.log(response);
-        handleOpen()  
+        handleOpen();
         toast.success(response.data.msg);
         setUser({
           username: "",
           email: "",
           password: "",
-          role:"",
+          role: "",
         });
         setOther({ cpassword: "", check: false });
-        handleLoading();
-        navigate('/register-resendmail')
+        handleLoading(false);
+        navigate("/register-resendmail");
       } catch (error) {
         console.log(error);
-        handleLoading();
-        handleOpen()
+        handleLoading(false);
+        handleOpen();
         if (error.response && error.response.data) {
           const errorData = error.response.data;
           if (errorData.email) {
@@ -114,82 +112,80 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
         } else {
           toast.error("An error occurred during registration.");
         }
-      }
+      } 
     }
-     
   };
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
       setgUser(codeResponse);
-        handleOpen();
- 
+      handleOpen();
     },
     onError: (error) => console.log("Login Failed:", error),
   });
-  
-   useEffect(()=>{
- 
-  const GoogleAuth = async () => {
-    try {
-      if (!guser) return;
-      handleLoading();
-      const response = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${guser.access_token}`,
-        {
-          headers: {
-            Authorization: `Bearer ${guser.access_token}`,
-            Accept: "application/json",
-          },
-        }
-      );
- 
-      let res;
-      if (user.role === "user") {
-        res = await UserGoogleSignup(response.data);
-      } else {
-         if(user.role ==="guide"){
-           res = await GuideGoogleSignup (response.data);
-        }
-      }
-  
-      toast.success(res.data.msg);
-      setgUser([]);
-      const token = JSON.stringify(res.data.token);
-      const decoded = jwtDecode(token);
-      if (decoded.role === 'user') {
-        localStorage.setItem('token', token);
-        navigate('/user/');
-      } else {
-        localStorage.setItem('token', token);
-        navigate('/guide/');
-      }
- 
-    } catch (error) {
-      console.log(error.response);
-      if (error.response && error.response.data && error.response.data.email) {
-        toast.error(error.response.data.email[0]);
-      } else {
-         // toast.error("An error occurred during registration.");
-      }
-    }
-  };
-
-  if(guser){
-    GoogleAuth()
-  }
-  
-},[guser])
 
   useEffect(() => {
-     document.title = "SignUp | Travel Tide";
- 
-    setUser({...user, role : selectedOption})
+    const GoogleAuth = async () => {
+      try {
+        if (!guser) return;
+        handleLoading();
+        const response = await axios.get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${guser.access_token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${guser.access_token}`,
+              Accept: "application/json",
+            },
+          }
+        );
+
+        let res;
+        if (user.role === "user") {
+          res = await UserGoogleSignup(response.data);
+        } else {
+          if (user.role === "guide") {
+            res = await GuideGoogleSignup(response.data);
+          }
+        }
+
+        toast.success(res.data.msg);
+        setgUser([]);
+        const token = JSON.stringify(res.data.token);
+        const decoded = jwtDecode(token);
+        if (decoded.role === "user") {
+          localStorage.setItem("token", token);
+          navigate("/user/");
+        } else {
+          localStorage.setItem("token", token);
+          navigate("/guide/");
+        }
+      } catch (error) {
+        console.log(error.response);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.email
+        ) {
+          toast.error(error.response.data.email[0]);
+        } else {
+          // toast.error("An error occurred during registration.");
+        }
+      }
+    };
+
+    if (guser) {
+      GoogleAuth();
+    }
+  }, [guser]);
+
+  useEffect(() => {
+    document.title = "SignUp | Travel Tide";
+
+    setUser({ ...user, role: selectedOption });
   }, [handleOpen]);
 
   return (
-    <>
-     
+    <div>
       <Dialog
         size="md"
         open={open}
@@ -197,57 +193,98 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
         className="bg-transparent shadow-none"
       >
         <Card className="mx-auto w-full max-w-[24rem]">
-          
-          
-        <div className="mt-12  px-6  place-items-center font-bold text-xl text-dark mx-auto block text-center">
-
-            Sign up to take your trip planning to the next level  
-            </div >
-            
-        <form onSubmit={FormHandlerSignup}>
-
-           <CardBody className="flex flex-col gap-4">
-           <ToastContainer />
-
-           <div className="flex items-center bg-white hover:bg-gray-300 rounded-full text-black border border-gray-500 p-2"  onClick={()=>login()}>
-           <img className="mr-16" src={google} alt="Google Logo" />
-           <p> Sign up with Google</p>
-          </div>  
-
-
-          <hr className="w-18  border-t border-gray-500 mt-4"/>   
-
-          <div className="relative">
-              
-              <Input label="Username" size="lg" value={user.username} name="username"  type="username" onChange={(e) =>setUser({ ...user, [e.target.name]: e.target.value })
-                    } />
-              
+          <div className="mt-12  px-6  place-items-center font-bold text-xl text-dark mx-auto block text-center">
+            Sign up to take your trip planning to the next level
           </div>
-              
-            <div className="relative">
-              
-            <Input label="Email" size="lg" value={user.email} name="email"  type="email"  onChange={(e) =>setUser({ ...user, [e.target.name]: e.target.value })} />
-            
+
+          <CardBody className="flex flex-col gap-4">
+            <ToastContainer />
+
+            <div
+              className="flex items-center bg-white hover:bg-gray-300 rounded-full text-black border border-gray-500 p-2"
+              onClick={() => login()}
+            >
+              <img className="mr-16" src={google} alt="Google Logo" />
+              <p> Sign up with Google</p>
             </div>
-            <Input label="Password" size="lg" type="password" name="password" value={user.password}onChange={(e) => setUser({ ...user, [e.target.name]: e.target.value }) } />
-            <Input label="Confirm Password" size="lg"  type="password" name="cpassword" value={other.cpassword}onChange={(e) => setOther({ ...other, [e.target.name]: e.target.value }) } />
+
+            <hr className="w-18  border-t border-gray-500 mt-4" />
+
+            <div className="relative">
+              <Input
+                label="Username"
+                size="lg"
+                value={user.username}
+                name="username"
+                type="username"
+                onChange={(e) =>
+                  setUser({ ...user, [e.target.name]: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="relative">
+              <Input
+                label="Email"
+                size="lg"
+                value={user.email}
+                name="email"
+                type="email"
+                onChange={(e) =>
+                  setUser({ ...user, [e.target.name]: e.target.value })
+                }
+              />
+            </div>
+            <Input
+              label="Password"
+              size="lg"
+              type="password"
+              name="password"
+              value={user.password}
+              onChange={(e) =>
+                setUser({ ...user, [e.target.name]: e.target.value })
+              }
+            />
+            <Input
+              label="Confirm Password"
+              size="lg"
+              type="password"
+              name="cpassword"
+              value={other.cpassword}
+              onChange={(e) =>
+                setOther({ ...other, [e.target.name]: e.target.value })
+              }
+            />
 
             <div className="-ml-2.5">
-              <Checkbox label="Remember Me" type="checkbox" checked={other.check} name="check" onChange={(e) => setOther({ ...other, [e.target.name]: e.target.checked }) } />
+              <Checkbox
+                label="Remember Me"
+                type="checkbox"
+                checked={other.check}
+                name="check"
+                onChange={(e) =>
+                  setOther({ ...other, [e.target.name]: e.target.checked })
+                }
+              />
             </div>
-
+            {loading && <Loading />}
           </CardBody>
           <CardFooter className="pt-0">
-            <Button variant="gradient" type="submit" fullWidth>
+            <Button
+              onClick={FormHandlerSignup}
+              variant="gradient"
+              type="submit"
+              fullWidth
+            >
               Sign Up
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">
               Already have an account?
               <Typography
                 as="a"
-                href="#signup"
+                href="/"
                 variant="small"
-                color="blue"
+                style={{ color: "#f75940" }}
                 className="ml-1 font-bold"
                 onClick={handleOpen}
               >
@@ -255,10 +292,8 @@ export function SignUpWithForm({open,handleOpen,selectedOption}) {
               </Typography>
             </Typography>
           </CardFooter>
-          </form>
-
-         </Card>
+        </Card>
       </Dialog>
-    </>
+    </div>
   );
 }

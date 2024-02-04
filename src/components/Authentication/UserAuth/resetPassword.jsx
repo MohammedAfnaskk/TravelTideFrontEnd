@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { resetPassword } from "../../../services/userApi";
-
+import Loading from "../../LoadingAnimation/Loading";
 import {
   Card,
   CardBody,
@@ -32,10 +32,17 @@ const ResetPassword = () => {
     }
   }, [location.search]);
 
+
+  //  For loading
+  const [loading, setLoading] = useState(false);
+  const handleLoading = () => setLoading((cur) => !cur);
+ 
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
     if (Validation()) {
+      handleLoading();
+
       try {
         console.log("Token value:", token);
         const res = await resetPassword(token, { password: user.password });
@@ -46,7 +53,11 @@ const ResetPassword = () => {
         } else {
           toast.error("Failed to reset the password");
         }
+        handleLoading();
+
       } catch (error) {
+        handleLoading();
+
         console.error("An error occurred during password reset:", error);
         toast.error(
           "An error occurred during password reset. Please try again later."
@@ -111,6 +122,7 @@ const ResetPassword = () => {
                 required
               />
             </div>
+            {loading && <Loading />}
           </CardBody>
           <CardFooter className="pt-0">
             <Button variant="gradient" type="submit" fullWidth>
@@ -118,7 +130,7 @@ const ResetPassword = () => {
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">
               Remember your password?{" "}
-              <Link to="/" className="text-blue-500 font-bold ml-1">
+              <Link to="/" className="text-[#f75940] font-bold ml-1">
                 Log in
               </Link>
             </Typography>

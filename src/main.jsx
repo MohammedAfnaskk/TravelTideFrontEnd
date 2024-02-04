@@ -20,14 +20,14 @@ import { store, persistor } from './redux/store.jsx';
   <GoogleOAuthProvider clientId="1005876540183-gsofr5joh9spfg6soqsula05ej2p4gcs.apps.googleusercontent.com">
  
   <BrowserRouter>
-  <ToastContainer />
+  <ToastContainer/>
 
     <App />
-  </BrowserRouter>,
-  </GoogleOAuthProvider>,
+  </BrowserRouter>
+  </GoogleOAuthProvider>
   </PersistGate>
 
-  </Provider>,
+  </Provider>
 
 
 )

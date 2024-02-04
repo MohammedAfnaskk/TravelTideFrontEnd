@@ -51,6 +51,12 @@
 
   const handleDateChange = (dates) => {
     const [start, end] = dates;
+    const currentDate = new Date();  
+     
+    if (start < currentDate) {
+      toast.error("Please select a future start date");
+      return;
+    }
     setState({ ...state, start_date: start, end_date: end });
 
    
@@ -98,6 +104,9 @@
   
 
   
+ 
+
+     
 
 
   return (
@@ -141,6 +150,7 @@
               endDate={end_date}
               selectsRange
               inline
+              minDate={new Date()}
               className="absolute top-12 left-0 z-10"
  
             />

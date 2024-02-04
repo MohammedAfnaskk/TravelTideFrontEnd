@@ -9,9 +9,11 @@ import {
 } from "@material-tailwind/react";
 import jwt_decode from "jwt-decode";
 import { GuideAxiosInstant } from "../../utils/axiosUtils";
-
 import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../LoadingAnimation/Loading";
+ 
 
 export default function EditProfile({ guide, childClick }) {
   const [open, setOpen] = useState(false);
@@ -23,6 +25,9 @@ export default function EditProfile({ guide, childClick }) {
     address: "",
     phone: "",
   });
+
+  const [loading, setLoading] = useState(false);
+  const handleLoading = () => setLoading((cur) => !cur);
 
   const handleOpen = () => {
     setProfile({
@@ -46,6 +51,20 @@ export default function EditProfile({ guide, childClick }) {
   };
 
   const handleSave = async () => {
+    // Validate phone number
+  const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(profile.phone)) {
+      toast.error("Invalid phone number. Please enter a 10-digit number.");
+      return;
+    }
+
+    // Validate username
+    const usernameRegex = /^[a-zA-Z]{3,20}$/;
+    if (!usernameRegex.test(profile.username)) {
+      toast.error("Invalid username. It must be between 3 and 20 characters and can only contain letters,");
+      return;
+    }
+
     const token = localStorage.getItem("token");
     const decode = jwt_decode(token);
     const guideId = decode.user_id;
@@ -57,7 +76,7 @@ export default function EditProfile({ guide, childClick }) {
     if (profile.profile_image) {
       UpdatedProfile.append("profile_image", profile.profile_image);
     }
-
+    handleLoading();
     try {
       const response = await GuideAxiosInstant.patch(
         `/account/guide_details/${guideId}/`,
@@ -72,7 +91,7 @@ export default function EditProfile({ guide, childClick }) {
       if (response.status === 200) {
         toast.success("Updated Successfully");
       } else {
-         if (response.status === 400) {
+        if (response.status === 400) {
           toast.error("Bad Request");
         } else if (response.status === 404) {
           toast("Not Found");
@@ -80,9 +99,11 @@ export default function EditProfile({ guide, childClick }) {
           toast("Error: " + response.status);
         }
       }
+      handleLoading();
     } catch (error) {
+      handleLoading();
       console.error("Error updating user details", error);
-      toast.error("Error updating user details");
+      toast.error("Error updating user details ");
     }
     childClick();
     handleOpen();
@@ -90,10 +111,13 @@ export default function EditProfile({ guide, childClick }) {
 
   return (
     <>
+
       <Button onClick={handleOpen} className="bg-gray-300 text-black font-bold">
         <i className="fas fa-pencil-alt mr-2"></i> Edit
       </Button>
       <Dialog open={open} handler={handleOpen}>
+      <ToastContainer/>
+
         <div className="flex items-center justify-between">
           <DialogHeader>Edit Profile</DialogHeader>
           <svg
@@ -166,6 +190,8 @@ export default function EditProfile({ guide, childClick }) {
             />
           </div>
         </DialogBody>
+        {loading && <Loading />}
+
         <DialogFooter className="space-x-2">
           <Button variant="gradient" color="deep-orange" onClick={handleSave}>
             Save Changes

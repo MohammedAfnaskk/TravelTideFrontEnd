@@ -24,10 +24,6 @@ const navListItems = [
     {
       label: "Travel Guide",
      },
-     {
-      label: "Plan a Trip",
-      path: "/guide/trip-join"
-     },
   
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -5,6 +5,8 @@ import { InviteFriends } from "../../services/userApi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
+import Loading from "../LoadingAnimation/Loading";
+import { UserUrl } from "../../constants/constants";
 
 export function InviteFriend() {
   const location = useLocation();
@@ -18,10 +20,13 @@ export function InviteFriend() {
 
 
   useEffect(() => {
-    setCopyLink(`http://localhost:5173/user/trip-page-invitee/${trip_id}`);
+    setCopyLink(`${UserUrl}/user/trip-page-invitee/${trip_id}`);
   }, [trip_id]);
-  
-  
+
+  //  For loading
+  const [loading, setLoading] = useState(false);
+  const handleLoading = () => setLoading((cur) => !cur);
+
 
   const handleCopyLink = async () => {
     try {
@@ -34,6 +39,8 @@ export function InviteFriend() {
   };
 
   const SendInvitationFriends = async () => {
+    handleOpen(null)
+    handleLoading();
     try {
       const response = await InviteFriends({ email, trip_id });
       if (response.status === 200) {
@@ -42,22 +49,28 @@ export function InviteFriend() {
         console.log("Error Response:", response.data);
         toast.error("Error sending invitation");
       }
+      handleLoading();
     } catch (error) {
+      handleLoading();
       console.log("Error:", error);
       toast.error("Error sending invitation");
     }
+
   };
 
   return (
     <>
+      {loading && <Loading />}
       <div className="mb-3 flex gap-3">
         <button onClick={() => handleOpen("sm")}>
           <img src={invite} className="w-4 h-4 ml-56" alt="Invite" />
         </button>
       </div>
       <Dialog open={size === "sm"} size={size || "md"} handler={() => handleOpen(null)}>
+
         <DialogHeader>Invite Trip Mates</DialogHeader>
         <DialogBody divider>
+
           <div className="relative">
             <p>Copy Link:</p>
             <div className="relative w-full flex  ">
@@ -72,6 +85,7 @@ export function InviteFriend() {
               </Button>
             </div>
           </div>
+
           <p className="mt-4">Invitation Email:</p>
           <Input
             type="email"
@@ -79,14 +93,14 @@ export function InviteFriend() {
             value={email}
             onChange={(e) => setInvitationEmail(e.target.value)}
           />
+          
           <Button variant="gradient" color="deep-orange" onClick={SendInvitationFriends} className="mt-2">
             Send Invitation
           </Button>
         </DialogBody>
         <DialogFooter>
           <Button variant="text" color="black">
-            <p> Manage Tripmates</p>
-          </Button>
+           </Button>
           <Button variant="text" color="red" onClick={() => handleOpen(null)} className="mr-1">
             <span>Cancel</span>
           </Button>

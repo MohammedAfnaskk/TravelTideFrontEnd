@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ComplexNavbar } from "../NavbarSemi/Nav";
+import { ComplexNavbar as UserNavbar } from "../NavbarSemi/Nav";
+import { ComplexNavbar as GuideNavbar } from "../../GuideUI/NavbarSemi/Nav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Textarea, Input } from "@material-tailwind/react";
@@ -8,11 +9,16 @@ import placeImage from "../../../assets/image/adminbg.jpg";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import jwt_decode from "jwt-decode";
-import { EditTripPlanning, EditPlanningData, TripPlanningData } from "../../../services/userApi";
+import {
+  EditTripPlanning,
+  EditPlanningData,
+  TripPlanningData,
+} from "../../../services/userApi";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { userAxiosInstant } from "../../../utils/axiosUtils";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
+import Loading from "../../../components/LoadingAnimation/Loading";
 
 const EditTripPlanningTable = () => {
   const navigate = useNavigate();
@@ -25,10 +31,13 @@ const EditTripPlanningTable = () => {
   const [end_date, setEndDate] = useState("");
 
   const mainPlaceData = useSelector((state) => state.user.MainPlace);
-   
+
+  //  For loading
+  const [loading, setLoading] = useState(false);
+  const handleLoading = () => setLoading((cur) => !cur);
 
   useEffect(() => {
-     userAxiosInstant
+    userAxiosInstant
       .get(`/travel_manager/MainPlaceViewSetsingleView/${id}`)
       .then((response) => {
         console.log("Response Data:--->>", response.data);
@@ -41,6 +50,7 @@ const EditTripPlanningTable = () => {
 
   const token = localStorage.getItem("token");
   const decode = jwt_decode(token);
+  const role = decode.role;
   const fileInputRef = useRef(null);
 
   const handleFileChange = (event) => {
@@ -147,7 +157,7 @@ const EditTripPlanningTable = () => {
   };
 
   useEffect(() => {
- if (mainPlaceData) {
+    if (mainPlaceData) {
       setMainPlace(mainPlaceData.main_place || "");
       setStartDate(
         mainPlaceData.start_date
@@ -159,22 +169,21 @@ const EditTripPlanningTable = () => {
           ? new Date(mainPlaceData.end_date).toISOString().split("T")[0]
           : ""
       );
-    }else
-        if (currenttripDetails) {
-        setMainPlace(currenttripDetails.main_place || "");
-        setStartDate(
-          currenttripDetails.start_date
-            ? new Date(currenttripDetails.start_date).toISOString().split("T")[0]
-            : ""
-        );
-        setEndDate(
-          currenttripDetails.end_date
-            ? new Date(currenttripDetails.end_date).toISOString().split("T")[0]
-            : ""
-        );
-      }
+    } else if (currenttripDetails) {
+      setMainPlace(currenttripDetails.main_place || "");
+      setStartDate(
+        currenttripDetails.start_date
+          ? new Date(currenttripDetails.start_date).toISOString().split("T")[0]
+          : ""
+      );
+      setEndDate(
+        currenttripDetails.end_date
+          ? new Date(currenttripDetails.end_date).toISOString().split("T")[0]
+          : ""
+      );
+    }
   }, [currenttripDetails, mainPlaceData]);
-  
+
   const note = notebuget.Note;
   const budget = notebuget.Budget;
   const imageUrl = notebuget.place_image
@@ -221,81 +230,80 @@ const EditTripPlanningTable = () => {
       return;
     }
 
-    // if (Budget.trim() === "") {
-    //   toast.error("Budget field is required");
-    //   return;
-    // }
+    handleLoading();
 
-  
     try {
-        const response = await EditTripPlanning(id, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      
-        console.log("response", response);
-      
-        if (response.status === 200) {
-          
-      
-            const formDataArray = entries.map((entry) => {
-                const entryFormData = new FormData();
-              
-                if (entry.id) {
-                  // Existing entry, append ID for update
-                  entryFormData.append('id', entry.id);
- 
-                }else{
-                    entryFormData.append('maintable_id', response.data.id);
-                }
-              
-                entryFormData.append("place", entry.place);
-                entryFormData.append("description", entry.description);
-                entryFormData.append("date", entry.date);
-              
-                if (entry.image) {
-                  entryFormData.append("image", entry.image);
-                }
-              
-                return entryFormData;
-              });
-              
-              for (const entryFormData of formDataArray) {
-                const entryId = entryFormData.get("id");
-              
-                if (entryId) {
-                  // Existing entry, make a PUT/PATCH request
-                  const entryResponse = await EditPlanningData(entryId, entryFormData, {
-                    headers: {
-                      "Content-Type": "multipart/form-data",
-                    },
-                  });
-              
-                  console.log("Response:", entryResponse);
-                } else {
+      const response = await EditTripPlanning(id, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-                   const newEntryResponse = await TripPlanningData(entryFormData, {
-                    headers: {
-                      "Content-Type": "multipart/form-data",
-                    },
-                  });
-              
-                  console.log("New Entry Response:", newEntryResponse);
-                }
+      console.log("response", response);
+
+      if (response.status === 200) {
+        const formDataArray = entries.map((entry) => {
+          const entryFormData = new FormData();
+
+          if (entry.id) {
+            // Existing entry, append ID for update
+            entryFormData.append("id", entry.id);
+          } else {
+            entryFormData.append("maintable_id", response.data.id);
+          }
+
+          entryFormData.append("place", entry.place);
+          entryFormData.append("description", entry.description);
+          entryFormData.append("date", entry.date);
+
+          if (entry.image) {
+            entryFormData.append("image", entry.image);
+          }
+
+          return entryFormData;
+        });
+
+        for (const entryFormData of formDataArray) {
+          const entryId = entryFormData.get("id");
+
+          if (entryId) {
+            // Existing entry, make a PUT/PATCH request
+            const entryResponse = await EditPlanningData(
+              entryId,
+              entryFormData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
               }
-            }              
-        toast.success("Update success");
-      } catch (error) {
-        console.log("response trip data", error);
-        toast.error("Error while saving entries");
+            );
+
+            console.log("Response:", entryResponse);
+          } else {
+            const newEntryResponse = await TripPlanningData(entryFormData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+
+            console.log("New Entry Response:", newEntryResponse);
+          }
+        }
       }
-    }      
+      handleLoading();
+      toast.success("Update success");
+    } catch (error) {
+      handleLoading();
+      console.log("response trip data", error);
+      toast.error("Error while saving entries");
+    }
+  };
   return (
     <div>
-      <ComplexNavbar />
+      {role === "guide" ? <GuideNavbar /> : <UserNavbar />}
 
-      {/* Add more content */}
+      {loading && <Loading />}
+
       <div className="relative overflow-y-auto">
         {/* main_place image  */}
 
@@ -313,7 +321,7 @@ const EditTripPlanningTable = () => {
 
           {/* Image */}
           <img
-            className="w-full lg:h-64 object-cover relative z-10 cursor-pointer"
+            className="w-full lg:h-72 object-cover relative z-10 cursor-pointer"
             src={imageUrl}
             alt="nature image"
             onClick={handleEditClick}
@@ -340,15 +348,18 @@ const EditTripPlanningTable = () => {
 
         {entries.map((entry, index) => (
           <div key={index} className="mt-10">
-            <div className="mb-8   inline-flex  ml-10">
-              <button
-                onClick={() => handleDeleteEntry(index)}
-                className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded"
-              >
-                <FontAwesomeIcon icon={faTrash} />{" "}
-                {/* Use the delete icon here */}
-              </button>
-            </div>
+            {index !== 0 && (
+              <div className="mb-8   inline-flex  ml-10">
+                <button
+                  onClick={() => handleDeleteEntry(index)}
+                  className="bg-blue-gray-300 text-dark font-bold py-2 px-4 rounded"
+                >
+                  <FontAwesomeIcon icon={faTrash} />{" "}
+                  {/* Use the delete icon here */}
+                </button>
+              </div>
+            )}
+
             <div className="  px-10">
               <p className="mb-2 font-bold">Place</p>
               <Input

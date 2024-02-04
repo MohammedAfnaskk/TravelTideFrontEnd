@@ -15,7 +15,8 @@ import {
   BugAntIcon,
   CheckIcon,
   CheckCircleIcon,
-  TagIcon,ChatBubbleLeftRightIcon
+  TagIcon,
+  ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/solid";
 
 import jwt_decode from "jwt-decode";
@@ -25,7 +26,7 @@ export function SideMenuBar(props) {
   const { setDisplayedComponent } = props;
   const [open, setOpen] = React.useState(0);
   const [openAlert, setOpenAlert] = React.useState(true);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const decode = jwt_decode(token);
   const role = decode.role;
@@ -34,19 +35,30 @@ export function SideMenuBar(props) {
     setOpen(open === value ? 0 : value);
   };
 
-  const handleNavigate =()=>{
-    navigate('/guide/chat-list')
-  }
+  const handleNavigate = () => {
+    navigate("/guide/chat-list");
+  };
+
+  const start_Planning_Navigate = () => {
+    navigate("/guide/location_plan/");
+  };
 
   return (
-    <Card className="  h-84 bg-gray-300 w-full max-w-[17.5rem] p-4 mt-10 border border-gray-300">
-      <div className="mb-2 p-4">
+    <Card className="  h-96 bg-gray-300 w-full max-w-[17.5rem] p-4 mt-10 border border-gray-300">
+      <div className="   p-4">
         <Typography variant="h5" color="blue-gray">
           Settings
         </Typography>
+        <button
+          onClick={start_Planning_Navigate}
+          className="rounded-lg bg-[#f75940] text-white h-8 w-32 lg:ml-24  mx-auto block  "
+        >
+          Start planning
+        </button>
       </div>
+
       <List>
-        <hr className="my-2 border-blue-gray-50" />
+        <hr className=" border-blue-gray-50" />
         <ListItem>
           <ListItemPrefix>
             <ShoppingBagIcon className="h-5 w-5" />
@@ -60,63 +72,34 @@ export function SideMenuBar(props) {
           <ListItemPrefix>
             <ChatBubbleLeftRightIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <button onClick={handleNavigate}>
-            Chat 
-          </button>
-          <ListItemSuffix>
-            <Chip
-              value="4"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            />
-          </ListItemSuffix>
+          <button onClick={handleNavigate}>Chat</button>
+          <ListItemSuffix></ListItemSuffix>
         </ListItem>
 
         {role !== "user" && (
           <>
-        <ListItem>
-          <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <button onClick={() => setDisplayedComponent("joinedTripmates")}>
-            Joined Tripmates
-          </button>
-          <ListItemSuffix>
-            <Chip
-              value="14"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            />
-          </ListItemSuffix>
-        </ListItem>
-         
-   
-        </>
-
+            <ListItem>
+              <ListItemPrefix>
+                <InboxIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <button onClick={() => setDisplayedComponent("joinedTripmates")}>
+                Joined Tripmates
+              </button>
+              <ListItemSuffix></ListItemSuffix>
+            </ListItem>
+          </>
         )}
         {role !== "guide" && (
           <>
-                  <ListItem>
-          <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <button onClick={() => setDisplayedComponent("manageTripmates")}>
-            Manage Tripmates
-          </button>
-          <ListItemSuffix>
-            <Chip
-              value="14"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            />
-          </ListItemSuffix>
-        </ListItem>
+            <ListItem>
+              <ListItemPrefix>
+                <InboxIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <button onClick={() => setDisplayedComponent("manageTripmates")}>
+                Manage Tripmates
+              </button>
+              <ListItemSuffix></ListItemSuffix>
+            </ListItem>
 
             <ListItem>
               <ListItemPrefix>
@@ -125,15 +108,7 @@ export function SideMenuBar(props) {
               <button onClick={() => setDisplayedComponent("joinedTrips")}>
                 Joined Trips
               </button>
-              <ListItemSuffix>
-                <Chip
-                  value="1"
-                  size="sm"
-                  variant="ghost"
-                  color="blue-gray"
-                  className="rounded-full"
-                />
-              </ListItemSuffix>
+              <ListItemSuffix></ListItemSuffix>
             </ListItem>
 
             <ListItem>

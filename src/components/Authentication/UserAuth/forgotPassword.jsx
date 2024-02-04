@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { forgotPassword } from "../../../services/userApi";
 import { ComplexNavbar } from "../../Navbar/navbar";
+import Loading from "../../LoadingAnimation/Loading";
 import {
   Card,
   CardBody,
@@ -34,10 +35,16 @@ const ForgotPassword = () => {
     const Regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return Regex.test(email);
   }
+
+  //  For loading
+  const [loading, setLoading] = useState(false);
+  const handleLoading = () => setLoading((cur) => !cur);
+
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
     if (Validation()) {
+      handleLoading();
       try {
         const res = await forgotPassword(user);
 
@@ -46,7 +53,10 @@ const ForgotPassword = () => {
          } else {
           toast.error("Failed to send reset password email");
         }
+        handleLoading();
+
       } catch (error) {
+        handleLoading();
         console.error("An error occurred during password reset:", error);
         toast.error("An error occurred during password reset. Please try again later.");
       }
@@ -76,6 +86,8 @@ const ForgotPassword = () => {
               required
             />
           </div>
+          {loading && <Loading />}
+
         </CardBody>
         <CardFooter className="pt-0">
           <Button variant="gradient" type="submit" fullWidth>
