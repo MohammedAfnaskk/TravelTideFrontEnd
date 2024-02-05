@@ -9,7 +9,6 @@ import UserRole from './components/Authentication/setRole';
 import UserRoutes from './routes/UserRoute';
 import GuideRoutes from './routes/GuideRoute';
 import AdminRoutes from './routes/AdminRoute';
-import PrivateRoutes from './routes/ProtuctedRoutes/PrivateRoute';
 import ForgotPassword from './components/Authentication/UserAuth/forgotPassword';
 import ResetPassword from './components/Authentication/UserAuth/resetPassword';
 function App() {

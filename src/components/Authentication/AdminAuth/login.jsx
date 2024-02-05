@@ -20,7 +20,7 @@ export default function AdminLogin() {
   
   const [user, setUser] = useState({ email: "", password: "" });
 
-
+ 
    //  For loading
   const [loading, setLoading] = useState(false);
   const handleLoading = () => setLoading((cur) => !cur);
@@ -62,11 +62,11 @@ export default function AdminLogin() {
         if (res.status === 200) {
           const token = JSON.stringify(res.data);
           const decoded = jwtDecode(token);
-
+ 
           if (decoded.role === "admin" && decoded.is_admin) {
             localStorage.setItem("token", token);
             toast.success("Login successful");
-            navigate("/admin");
+            navigate("/admin/dashbord");
           } else {
             toast.error("Invalid role");
           }

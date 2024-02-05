@@ -39,29 +39,27 @@ export default function UserChat({ recieverid }) {
       const token = localStorage.getItem("token");
       const decoded = jwtDecode(token);
       const response = await userAxiosInstant.get(
-        `/account/guide_details/${decoded.user_id}/`);
+        `/account/guide_details/${decoded.user_id}/`
+      );
       setSenderDetails({
         id: decoded.user_id,
         email: decoded.email,
-        profile_image:response.data.profile_image,
+        profile_image: response.data.profile_image,
       });
     } catch (error) {
       console.error(error);
     }
   };
 
-  
-
   useEffect(() => {
     RecieverChat();
   }, []);
-   
-
 
   const onButtonClicked = () => {
     if (messageRef.current.value.trim() == "") {
       return;
     }
+
     clientState.send(
       JSON.stringify({
         message: messageRef.current.value,
@@ -73,8 +71,6 @@ export default function UserChat({ recieverid }) {
   };
 
   const setUpChat = () => {
-    
-
     userAxiosInstant
       .get(
         `chatserver/user-previous-chats/${senderdetails.id}/${recipientdetails.id}/`
@@ -94,27 +90,24 @@ export default function UserChat({ recieverid }) {
       console.log("WebSocket Client Connected");
     };
 
-    
     client.onmessage = (message) => {
       const dataFromServer = JSON.parse(message.data);
-      console.log('Received message from server:', dataFromServer);
+      console.log("Received message from server:", dataFromServer);
       if (dataFromServer) {
         const isNewMessage = !messages.some(
           (msg) => msg.message === dataFromServer.message
         );
- 
+
         if (isNewMessage) {
           setMessages((prevMessages) => [
             ...prevMessages,
             {
               message: dataFromServer.message,
               sender_email: dataFromServer.senderUsername,
-
             },
           ]);
-         
-          console.log('New message added to state:', dataFromServer.message);
 
+          console.log("New message added to state:", dataFromServer.message);
         }
       }
     };
@@ -129,16 +122,13 @@ export default function UserChat({ recieverid }) {
   };
 
   useEffect(() => {
-     if (senderdetails.id != null && recipientdetails.id != null) {
+    if (senderdetails.id != null && recipientdetails.id != null) {
       setUpChat();
     }
     if (messageRef.current) {
       messageRef.current.scrollTop = messageRef.current.scrollHeight;
     }
   }, [senderdetails, recipientdetails]);
-  
-  
-
 
   return (
     <Fragment>
@@ -162,48 +152,48 @@ export default function UserChat({ recieverid }) {
                 </div>
               </div>
               <div className="h-80 overflow-y-auto mt-4 p-4">
-                   {messages.map((message, index) =>
-                    senderdetails.email === message.sender_email ? (
-                      <>
-                        <div class="flex justify-end mb-2" key={index}>
-                          <div class=" shadow  text-white  bg-[#262626] py-1 px-4 rounded-md max-w-xs">
-                            {message.message}
-                          </div>
-                          <div className="rounded-full flex justify-center items-center -me-3 ms-2 w-10 h-10 ">
-                            <img
-                              src={
-                                senderdetails.profile_image
-                                  ? senderdetails.profile_image
-                                  : ''
-                              }
-                              alt=""
-                              className="rounded-full w-10 h-10"
-                            />
-                          </div>
+                {messages.map((message, index) =>
+                  senderdetails.email === message.sender_email ? (
+                    <>
+                      <div class="flex justify-end mb-2" key={index}>
+                        <div class=" shadow  text-white  bg-[#262626] py-1 px-4 rounded-md max-w-xs">
+                          {message.message}
                         </div>
-                      </>
-                    ) : (
-                      <>
-                        <div class="flex mb-2" key={index}>
-                          <div className="rounded-full flex justify-center items-center -ms-4 me-1 w-10 h-10 ">
-                            <img
-                              src={
-                                recipientdetails.profile_image
-                                  ? recipientdetails.profile_image
-                                  : ''
-                              }
-                              alt=""
-                              className="rounded-full w-10 h-10"
-                            />
-                          </div>
-                          <div class="shadow py-1 px-4  text-white bg-[#262626] rounded-md max-w-xs">
-                            {message.message}
-                          </div>
+                        <div className="rounded-full flex justify-center items-center -me-3 ms-2 w-10 h-10 ">
+                          <img
+                            src={
+                              senderdetails.profile_image
+                                ? senderdetails.profile_image
+                                : ""
+                            }
+                            alt=""
+                            className="rounded-full w-10 h-10"
+                          />
                         </div>
-                      </>
-                    )
-                  )}
-                </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div class="flex mb-2" key={index}>
+                        <div className="rounded-full flex justify-center items-center -ms-4 me-1 w-10 h-10 ">
+                          <img
+                            src={
+                              recipientdetails.profile_image
+                                ? recipientdetails.profile_image
+                                : ""
+                            }
+                            alt=""
+                            className="rounded-full w-10 h-10"
+                          />
+                        </div>
+                        <div class="shadow py-1 px-4  text-white bg-[#262626] rounded-md max-w-xs">
+                          {message.message}
+                        </div>
+                      </div>
+                    </>
+                  )
+                )}
+              </div>
 
               <div className="mt-4 flex mb-3 p-4">
                 <input
