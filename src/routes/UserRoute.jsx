@@ -16,7 +16,7 @@ import EditPlanningPage from "../pages/UserUI/TripEditing/mainPage";
 function UserRoutes() {
   return (
     <Routes>
-      <Route exact element={<UserProtected />} />
+      <Route element={<UserProtected />} >
       <Route path="/" element={<UserHomePage />} />
       <Route path="/location_plan" element={<LocationPlan />} />
       <Route path="/trip-planning" element={<TripPlanning />} />
@@ -31,7 +31,7 @@ function UserRoutes() {
         element={<InviteeTripPage />}
       />
       <Route path="/edit-trip" element={<EditPlanningPage/>} />
-  
+      </Route>
     </Routes>
   );
 }

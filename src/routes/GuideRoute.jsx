@@ -12,7 +12,7 @@ import UserChat from '../components/ChatBox/chatList';
 function GuideRoutes() {
   return (
     <Routes>
-      <Route exact element={<GuideProtected/>}/>
+      <Route element={<GuideProtected/>}>
         <Route path='/' element={<GuideHomePage />} />
         <Route path='/location_plan' element={<LocationPlan/>}/>  
         <Route path='/trip-planning-guide' element={<TripPlanning/>}/>
@@ -21,6 +21,7 @@ function GuideRoutes() {
         <Route path="/edit-trip" element={<EditPlanningPage/>} />
         <Route path="/trip-guiding" element={<TripGuidingPage />} />
         <Route path="/chat-list" element={<UserChat/>}/>
+        </Route>
 
      </Routes>
  

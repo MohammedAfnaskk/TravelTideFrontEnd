@@ -1,9 +1,7 @@
 import jwtDecode from 'jwt-decode'
 import React from 'react'
-import { Outlet } from 'react-router-dom'
-import GuideHomePage from "../../pages/GuideUI/home/home";
-import AdminHomePage from "../../pages/AdminUI/dashboard";
-import UnknownPage from "../../pages/404_Page/404_page";
+import { Outlet,Navigate } from 'react-router-dom'
+
 
 function UserProtected() {
     const token = localStorage.getItem('token')
@@ -12,12 +10,12 @@ function UserProtected() {
         if (decoded.role === 'user'){
             return <Outlet/>
         }else if (decoded.role === 'guide'){
-            return <GuideHomePage/>
+            return<Navigate to={'/guide/'}/>
         }else if (decoded.role === "admin" && decoded.is_admin){
-            return <AdminHomePage/>
+            return <Navigate to={'/admin/dashbord'}/>
         }
     }else{
-        return <UnknownPage/>
+        return <Navigate to={'/'}/>
     }
 
   

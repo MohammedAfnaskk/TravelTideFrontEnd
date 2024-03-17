@@ -63,7 +63,7 @@ export default function AdminLogin() {
           const token = JSON.stringify(res.data);
           const decoded = jwtDecode(token);
  
-          if (decoded.role === "admin" && decoded.is_admin) {
+          if (decoded.is_admin) {
             localStorage.setItem("token", token);
             toast.success("Login successful");
             navigate("/admin/dashbord");

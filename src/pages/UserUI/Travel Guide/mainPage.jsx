@@ -7,10 +7,14 @@ import Footer from "../../../components/footer/footer";
 import jwt_decode from "jwt-decode";
 
 export const TripGuidingPage = () => {
+  let isGuide = ''
   const token = localStorage.getItem("token");
-  const decode = jwt_decode(token);
+  if (token){
+    const decode = jwt_decode(token);
 
-  const isGuide = decode && decode.role === "guide";
+    isGuide = decode && decode.role === "guide";
+  }
+  
 
   return (
     <div>

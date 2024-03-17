@@ -87,17 +87,9 @@ export default function EditProfile({ guide, childClick }) {
           },
         }
       );
-
+        console.log(response,'daxooo');
       if (response.status === 200) {
         toast.success("Updated Successfully");
-      } else {
-        if (response.status === 400) {
-          toast.error("Bad Request");
-        } else if (response.status === 404) {
-          toast("Not Found");
-        } else {
-          toast("Error: " + response.status);
-        }
       }
       handleLoading();
     } catch (error) {
