@@ -15,6 +15,7 @@
             setMainPlace: (state, action) =>{
                 state.MainPlace = action.payload;
             },
+            
             clearMainPlace: (state) =>{
                 state.MainPlace ={};
             },

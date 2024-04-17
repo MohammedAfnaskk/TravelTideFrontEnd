@@ -35,12 +35,18 @@ export function SideMenuBar(props) {
     setOpen(open === value ? 0 : value);
   };
 
-  const handleNavigate = () => {
+  const handleNavigateChatGuide = () => {
     navigate("/guide/chat-list");
   };
-
-  const start_Planning_Navigate = () => {
+  const start_Planning_Navigate_Guide = () => {
     navigate("/guide/location_plan/");
+  };
+
+  const handleNavigateChatUser = () => {
+    navigate("/user/chat-list");
+  };
+  const start_Planning_Navigate_User = () => {
+    navigate("/user/location_plan/");
   };
 
   return (
@@ -49,12 +55,22 @@ export function SideMenuBar(props) {
         <Typography variant="h5" color="blue-gray">
           Settings
         </Typography>
-        <button
-          onClick={start_Planning_Navigate}
-          className="rounded-lg bg-[#f75940] text-white h-8 w-32 lg:ml-24  mx-auto block  "
-        >
-          Start planning
-        </button>
+        {role == "user" && (
+          <button
+            onClick={start_Planning_Navigate_User}
+            className="rounded-lg bg-[#f75940] text-white h-8 w-32 lg:ml-24  mx-auto block  "
+          >
+            Start planning
+          </button>
+        )}
+        {role == "guide" && (
+          <button
+            onClick={start_Planning_Navigate_Guide}
+            className="rounded-lg bg-[#f75940] text-white h-8 w-32 lg:ml-24  mx-auto block  "
+          >
+            Start planning
+          </button>
+        )}
       </div>
 
       <List>
@@ -68,16 +84,18 @@ export function SideMenuBar(props) {
           </button>
         </ListItem>
 
-        <ListItem>
-          <ListItemPrefix>
-            <ChatBubbleLeftRightIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <button onClick={handleNavigate}>Chat</button>
-          <ListItemSuffix></ListItemSuffix>
-        </ListItem>
+      
 
         {role !== "user" && (
           <>
+            <ListItem>
+          <ListItemPrefix>
+            <ChatBubbleLeftRightIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          <button onClick={handleNavigateChatGuide}>Chat</button>
+          <ListItemSuffix></ListItemSuffix>
+        </ListItem>
+
             <ListItem>
               <ListItemPrefix>
                 <InboxIcon className="h-5 w-5" />
@@ -91,6 +109,14 @@ export function SideMenuBar(props) {
         )}
         {role !== "guide" && (
           <>
+            <ListItem>
+          <ListItemPrefix>
+            <ChatBubbleLeftRightIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          <button onClick={handleNavigateChatUser}>Chat</button>
+          <ListItemSuffix></ListItemSuffix>
+        </ListItem>
+
             <ListItem>
               <ListItemPrefix>
                 <InboxIcon className="h-5 w-5" />

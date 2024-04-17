@@ -13,6 +13,8 @@ import UserProtected from "./ProtuctedRoutes/UserProtected";
 import Profile from "../components/Profile/profile";
 import InviteeTripPage from "../pages/UserUI/InvitaionTripPage/invitationTripPage";
 import EditPlanningPage from "../pages/UserUI/TripEditing/mainPage";
+import UserChat from '../components/ChatBox/chatList';
+
 function UserRoutes() {
   return (
     <Routes>
@@ -26,6 +28,8 @@ function UserRoutes() {
       <Route path="/trip-package-details/:id/" element={<PackageDetails />} />
       <Route path="/trip-guiding-details/:id/" element={<GuidingDetails />} />
       <Route path="/user-profile" element={<Profile />} />
+      <Route path="/chat-list" element={<UserChat/>}/>
+
       <Route
         path="/trip-page-invitee/:emailId/:tripDataId"
         element={<InviteeTripPage />}
