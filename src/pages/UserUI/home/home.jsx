@@ -33,8 +33,8 @@ function Home() {
       <div className="flex flex-col lg:flex-row">
         <div className=" p-2 border-1 sm:w-1/2 md:w-2/5 lg:w-2/5 xl:w-2/5 ">
           <div className="text-dark-600 bg-white text-left font-semibold text-4xl leading-1 ml-2 mt-44 tracking-wide font-sans text-center sm:text-left lg:ml-24 break-all">
-            <p>userYou'll never</p>
-            travel without our trip ,planner again
+           <p>You'll Never</p>
+           Travel Without Our Trip Planner Again
           </div>
           <div className="text-gray-600 bg-white text-left font-normal text-2xl leading-1 ml-2 mt-6 tracking-wide font-sans text-center sm:text-left lg:ml-24">
             Build, organize, and map your itineraries in a free travel app
