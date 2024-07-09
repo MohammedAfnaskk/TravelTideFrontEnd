@@ -36,8 +36,8 @@ function Home() {
 
           <div className='text-dark-600 bg-white text-left font-semibold text-4xl leading-1 ml-2 mt-44 tracking-wide font-sans text-center sm:text-left lg:ml-24 break-all'>
 
-            <p>GuideYou'll never</p>
-            travel without our trip ,planner again
+           <p>You'll Never</p>
+           Travel Without Our Trip Planner Again
 
           </div>
           <div className='text-gray-600 bg-white text-left font-normal text-2xl leading-1 ml-2 mt-6 tracking-wide font-sans text-center sm:text-left lg:ml-24'>
