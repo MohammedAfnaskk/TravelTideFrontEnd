@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { userAxiosInstant } from "../../../utils/axiosUtils";
+import userimage from "../../../assets/image/user.png"
  
 function ProfileMenu() {
   const navigate = useNavigate();
@@ -90,8 +91,8 @@ function ProfileMenu() {
             src={
               userData
                 ? userData.profile_image
-                : "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-            }
+                :userimage
+             }
           />
           <ChevronDownIcon
             strokeWidth={2.5}
@@ -157,7 +158,7 @@ const navListItems = [
 
 function NavList() {
   return (
-    <div className="mb-4 mt-3 flex flex-col gap-2  lg:mt-3 lg:flex-row mr-96 ">
+    <div className="mb-4 mt-3 flex flex-col gap-2 lg:mt-3 lg:flex-row mr-4 ">
       {navListItems.map((item, index) => (
         <div key={index} className="flex items-center">
           <Typography
@@ -204,16 +205,16 @@ export function ComplexNavbar({}) {
   }, []);
 
   return (
-    <Navbar className="mx-auto max-w-full  p-3 pl-6 rounded-none  ">
+    <Navbar className="mx-auto max-w-full  p-6 pl-6 rounded-none   ">
       <div className="relative mx-auto flex items-center text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          className="text-2xl font-bold  text-[#f75940] hover:text-[#e54632] lg:text-3xl transition duration-300 ease-in-out ml-2 lg:ml-24 "
-        >
-          Travel Tide
-        </Typography>
-        <div className="absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
+          <Typography
+            as="a"
+            href="#"
+            className="text-2xl font-bold  text-[#f75940] hover:text-[#e54632] lg:text-3xl transition duration-300 ease-in-out ml-2 lg:ml-24 "
+          >
+            Travel Tide
+          </Typography>
+        <div className="absolute top-2/4   right-6 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
           <NavList />
         </div>
         <IconButton

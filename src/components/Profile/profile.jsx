@@ -1,16 +1,15 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import ProfileMapComponent from './profileMap';
 import { ComplexNavbar } from '../../pages/GuideUI/GuideNavbar/navbar';
 import { UserComplexNavbar } from '../../pages/UserUI/Navbar/navbar/';
-import jwt_decode from 'jwt-decode'
+import jwt_decode from 'jwt-decode';
 import MyTripPlans from './planningDetails';
-import Footer from '../footer/footer'
+import Footer from '../footer/footer';
 import { SideMenuBar } from './sideMenuBar';
 import { Invitation } from './tripInvitations';
 import { ManageTripmates } from './manageTripmates';
 import JoinedTrips from './JoinedTrips';
 import { ManageTripmatesGuide } from './manageTripmatesGuide';
-
 
 const Profile = () => {
   const token = localStorage.getItem("token");
@@ -20,47 +19,56 @@ const Profile = () => {
   
   return (
     <>
-    {role === 'guide' ? (
+      {role === 'guide' ? (
         <ComplexNavbar />
       ) : (
         <UserComplexNavbar />
-      )}      
-         <ProfileMapComponent />
-        <div className='flex first-line gap-14 mx-40'>
-        <SideMenuBar setDisplayedComponent={setDisplayedComponent} />
+      )}
 
-        <div className="w-full mt-4">
+      <ProfileMapComponent />
+
+      <div className="flex flex-col lg:flex-row gap-14 mx-4 sm:mx-6 lg:mx-40 mt-4">
+        <div className="w-full lg:w-1/4 ">
+          <SideMenuBar setDisplayedComponent={setDisplayedComponent} />
+        </div>
+
+        <div className="w-full lg:w-3/4 mt-4">
           {displayedComponent === 'myTripPlans' && (
             <div className="my-trip-plans-class">
               <MyTripPlans />
             </div>
           )}
-            {displayedComponent === 'joinedTripmates' && (
+
+          {displayedComponent === 'joinedTripmates' && (
             <div className="my-trip-plans-class">
-              <ManageTripmatesGuide/>
+              <ManageTripmatesGuide />
             </div>
           )}
-            {displayedComponent === 'manageTripmates' && (
+
+          {displayedComponent === 'manageTripmates' && (
             <div className="my-trip-plans-class">
-              <ManageTripmates/>
+              <ManageTripmates />
             </div>
           )}
-             {displayedComponent === 'joinedTrips' && (
+
+          {displayedComponent === 'joinedTrips' && (
             <div className="my-trip-plans-class">
-              <JoinedTrips/>
+              <JoinedTrips />
             </div>
           )}
+
           {displayedComponent === 'invitation' && (
-            <div className="w-full ">
+            <div className="w-full">
               <Invitation />
             </div>
           )}
 
         </div>
       </div>
-      <Footer/>
 
-     </>
+      <Footer />
+      
+    </>
   );
 };
 

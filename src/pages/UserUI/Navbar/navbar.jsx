@@ -10,71 +10,55 @@ import {
   MenuItem,
   Avatar,
   IconButton,
-  Input,
 } from "@material-tailwind/react";
 import {
   UserCircleIcon,
   ChevronDownIcon,
-  Cog6ToothIcon,
-  InboxArrowDownIcon,
-  LifebuoyIcon,
   PowerIcon,
   Bars2Icon,
 } from "@heroicons/react/24/outline";
 import Login from "../../../components/Authentication/UserAuth/login";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { userAxiosInstant } from "../../../utils/axiosUtils";
 import jwt_decode from "jwt-decode";
+import userimage from "../../../assets/image/user.png"
 
-function ProfileMenu() {
+// Helper function to check authentication status
+const isAuthenticated = () => !!localStorage.getItem("token");
+
+function ProfileMenu({ closeMobileMenu }) {
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userData, setUserData] = useState({});
   const closeMenu = () => setIsMenuOpen(false);
-  const token = localStorage.getItem("token");
-  const decode = jwt_decode(token);
-  const userId = decode.user_id;
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await userAxiosInstant.get(
-          `/account/guide_details/${userId}/`
-        );
-        console.log(response.data);
-        setUserData(response.data);
-      } catch (error) {
-        console.error("User data not found", error);
-      }
-    };
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decode = jwt_decode(token);
+      const userId = decode.user_id;
 
-    fetchUserData();
-  }, [userId]);
+      const fetchUserData = async () => {
+        try {
+          const response = await userAxiosInstant.get(
+            `/account/guide_details/${userId}/`
+          );
+          setUserData(response.data);
+        } catch (error) {
+          console.error("User data not found", error);
+        }
+      };
+      fetchUserData();
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    isAuthenticated();
-    navigate("/user");
     window.location.reload();
   };
 
-  const profileMenuItems = [
-    {
-      label: "My Profile",
-      icon: UserCircleIcon,
-      path: "/user/user-profile/",
-    },
-
-    {
-      label: "Sign Out",
-      icon: PowerIcon,
-      onClick: handleLogout,
-    },
-  ];
-
   return (
-    <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
+    <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end " className="z-50">
       <MenuHandler>
         <Button
           variant="text"
@@ -84,16 +68,11 @@ function ProfileMenu() {
           <Avatar
             variant="circular"
             size="sm"
-            alt="tania andrew"
+            alt="User Avatar"
             className="border border-gray-900 p-0.5"
-            src={
-              userData
-                ? userData.profile_image
-                : "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-            }
+            src={userData.profile_image || userimage}
           />
           <ChevronDownIcon
-            strokeWidth={2.5}
             className={`h-3 w-3 transition-transform ${
               isMenuOpen ? "rotate-180" : ""
             }`}
@@ -101,41 +80,28 @@ function ProfileMenu() {
         </Button>
       </MenuHandler>
       <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon, path, onClick }, key) => {
-          const isLastItem = key === profileMenuItems.length - 1;
-          return (
-            <MenuItem
-              key={label}
-              onClick={() => {
-                closeMenu();
-                if (path) {
-                  // You can use either Link or navigate based on whether the item has a path
-                  navigate(path);
-                } else if (onClick) {
-                  onClick();
-                }
-              }}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
-              }`}
-            >
-              {React.createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
-                strokeWidth: 2,
-              })}
-              <Typography
-                as="span"
-                variant="small"
-                className="font-normal"
-                color={isLastItem ? "red" : "inherit"}
-              >
-                {label}
-              </Typography>
-            </MenuItem>
-          );
-        })}
+        <MenuItem
+          onClick={() => {
+            closeMenu();
+            navigate("/user/user-profile/");
+            if (closeMobileMenu) closeMobileMenu(); // Close mobile menu if in mobile view
+          }}
+        >
+          <UserCircleIcon className="h-4 w-4 mr-2" />
+          My Profile
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            closeMenu();
+            handleLogout();
+          }}
+          className="flex items-center gap-2 rounded hover:bg-red-500/10"
+        >
+          <PowerIcon className="h-4 w-4 text-red-500" />
+          <Typography as="span" variant="small" className="font-normal text-red-500">
+            Sign Out
+          </Typography>
+        </MenuItem>
       </MenuList>
     </Menu>
   );
@@ -160,13 +126,13 @@ const navListItems = [
 
 function NavList() {
   return (
-    <div className="mb-4 mt-3 flex flex-col gap-2  lg:mt-3 lg:flex-row mr-4 ">
+    <div className="mb-4 mt-3 flex flex-col gap-2  lg:mt-3 lg:flex-row mr-4  ">
       {navListItems.map((item, index) => (
         <div key={index} className="flex items-center">
           <Typography
             as="a"
             href="#"
-            variant="small"
+            variant=""
             color="blue-gray"
             className="font-bold"
           >
@@ -183,69 +149,80 @@ function NavList() {
 
 export default NavList;
 
-const isAuthenticated = () => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    return true;
-  } else {
-    return false;
-  }
-};
 
-export function UserComplexNavbar({}) {
+export function UserComplexNavbar() {
   const navigate = useNavigate();
-  const [isNavOpen, setIsNavOpen] = React.useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState();
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 960);
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
-  React.useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false)
-    );
+  const updateMedia = () => {
+    setIsDesktop(window.innerWidth >= 960);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateMedia);
+    return () => window.removeEventListener("resize", updateMedia);
   }, []);
 
   return (
-    <Navbar className="mx-auto max-w-full  p-3 pl-6 rounded-none  ">
+    <Navbar className="mx-auto max-w-full p-6 pl-6 rounded-none z-50">
       <div className="relative mx-auto flex items-center text-blue-gray-900">
         <Typography
           as="a"
           href="#"
-          className="text-2xl font-bold  text-[#f75940] hover:text-[#e54632] lg:text-3xl transition duration-300 ease-in-out ml-2 lg:ml-24 "
+          className="text-2xl font-bold text-[#f75940] hover:text-[#e54632] lg:text-3xl transition duration-300 ease-in-out ml-2 lg:ml-24"
         >
           Travel Tide
         </Typography>
-        <div className="absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
+        
+        {/* Desktop Nav List */}
+        <div className="absolute top-2/4 right-6 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
           <NavList />
         </div>
-        <IconButton
-          size="sm"
-          color="blue-gray"
-          variant="text"
-          onClick={toggleIsNavOpen}
-          className="ml-auto mr-2 lg:hidden"
-        >
-          <Bars2Icon className="h-6 w-6" />
-        </IconButton>
 
-        {isAuthenticated() ? (
-          <ProfileMenu />
+        {/* Mobile Menu Icon */}
+        {isLoggedIn && (
+          <IconButton
+            size="sm"
+            color="blue-gray"
+            variant="text"
+            onClick={toggleIsNavOpen}
+            className="ml-auto mr-2 lg:hidden z-50"
+          >
+            <Bars2Icon className="h-6 w-6" />
+          </IconButton>
+        )}
+
+        {/* Profile or Login/Signup Buttons */}
+        {isLoggedIn ? (
+          isDesktop ? (
+            <ProfileMenu />
+          ) : null // Hide ProfileMenu in mobile view (it will be shown in MobileNav)
         ) : (
-          <div className="ml-auto mr-2 ">
+          <div className="ml-auto mr-2 flex items-center gap-4">
             <Login />
-            <Button
-              onClick={() => navigate("/user_role")}
-              className="bg-[#f75940] rounded-full text-white py-2 px-4"
-            >
+            <Button onClick={() => navigate("/user_role")} className="bg-[#f75940] rounded-full text-white py-2 px-4">
               Sign up
             </Button>
           </div>
         )}
       </div>
-      <MobileNav open={isNavOpen} className="overflow-scroll">
-        <NavList />
-      </MobileNav>
+
+      {/* Mobile Navigation - Only visible if logged in */}
+      {isLoggedIn && (
+        <MobileNav open={isNavOpen} className="overflow-scroll z-40">
+          <NavList />
+          {/* Add ProfileMenu to MobileNav for easy access */}
+          {!isDesktop && (
+            <div className="mt-4">
+              <ProfileMenu closeMobileMenu={() => setIsNavOpen(false)} />
+            </div>
+          )}
+        </MobileNav>
+      )}
     </Navbar>
   );
 }

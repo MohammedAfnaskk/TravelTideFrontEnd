@@ -69,10 +69,8 @@ const Payment = (props) => {
           withCredentials: true,
         }
       );
-  
       window.location.href = response.data.message.url
  
-       
      } catch (error) {
       // Handle errors
       console.error("Error creating checkout session:", error);

@@ -26,8 +26,12 @@ const TripPackageList = (props) => {
   return (
     <div className="mt-9 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:mx-44">
       {tripsToDisplay.length === 0 && !error ? (
-        <div className="text-center text-gray-700 font-bold">
-          No results found.
+        <div className="flex items-center justify-center w-full h-[300px] bg-gray-200 rounded-lg mx-auto text-center text-gray-700 font-bold">
+          <p>No results found.</p>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center w-full h-[300px] bg-red-200 rounded-lg mx-auto text-center text-gray-700 font-bold">
+          <p>Error loading trips. Please try again later.</p>
         </div>
       ) : (
         tripsToDisplay.map((trip, index) => (
@@ -49,7 +53,7 @@ const TripPackageList = (props) => {
             <div className="font-bold text-xl mb-2 mt-2">
               {trip.main_place}
             </div>
-            <p className="text-black -700 font-bold">
+            <p className="text-black-700 font-bold">
               Guide: {trip.user_name}
             </p>
 
