@@ -27,16 +27,17 @@ function Home() {
   };
 
   return (
+    <>
     <div>
       <UserComplexNavbar />
 
       <div className="flex flex-col lg:flex-row">
         <div className=" p-2 border-1 sm:w-1/2 md:w-2/5 lg:w-2/5 xl:w-2/5 ">
+ 
           <div className="text-dark-600 bg-white text-left font-semibold text-3xl md:text-4xl leading-1 ml-2 mt-14 md:mt-44 tracking-wide font-sans text-center sm:text-left lg:ml-24 whitespace-normal break-words">
             <p>You'll never</p>
             <p>travel without our trip planner again</p>
-          </div>
-
+           </div>
           <div className="text-gray-600 bg-white text-left font-normal text-xl md:text-2xl leading-1 ml-2 mt-6 tracking-wide font-sans text-center sm:text-left lg:ml-24 whitespace-normal break-words ">
             Build, organize, and map your itineraries in a free travel app
             designed for vacations & road trips
@@ -93,8 +94,9 @@ function Home() {
 
       <Footer />
 
-      <div></div>
+      
     </div>
+    </>
   );
 }
 
